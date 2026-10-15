@@ -1,0 +1,9 @@
+Summary of the conversation so far:
+
+The user is writing an ML course project report on predicting crop yield from weather data, using the FAO crop yield dataset merged with NASA POWER weather data (~28,000 rows). The report must be in IEEE conference format, at most 6 pages including references, due December 5.
+
+Methodology: they trained linear regression (baseline), random forest, and XGBoost; XGBoost performed best. RMSE is the primary metric, with R² reported as well. The evaluation uses a temporal split — train on 1990–2015, test on 2016–2020 — replacing an earlier 80/20 random split because of leakage concerns. Hyperparameters were tuned with grid search and 5-fold time-series CV, but this will get only a sentence due to space.
+
+Results: one main table of RMSE and R² per model on the test set, plus a predicted-vs-actual figure. XGBoost's test RMSE is 0.47 t/ha (corrected from 0.42 after an inverse-scaling bug). A SHAP plot was planned but dropped for space; the top features will be named in text instead.
+
+Related work (current section): group papers into statistical/crop-simulation, classical ML, and deep learning approaches, then position the work as classical ensembles on public weather data with leakage-free temporal evaluation. At least 15 references are required, managed with Zotero (Better BibTeX) and the IEEEtran style. The user's latest question is what the first paragraph of related work should say.

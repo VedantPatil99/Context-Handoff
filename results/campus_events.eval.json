@@ -1,0 +1,49 @@
+{
+  "tokenizer": "approx (word-piece heuristic)",
+  "tokens": {
+    "Full transcript": 3497,
+    "Prose summary (LLM-style compaction)": 427,
+    "IR (strict, as proposed) header": 284,
+    "IR (ablation: constraints global) header": 378
+  },
+  "bundle_tokens_not_loaded": 20829,
+  "live_recall": {
+    "summary": "18/18",
+    "IR (strict, as proposed)": "10/18",
+    "IR (ablation: constraints global)": "13/18"
+  },
+  "loader": {
+    "header": 284,
+    "expanded": 356,
+    "resolved": [
+      "api_design_choice",
+      "deadline",
+      "notifications_sent"
+    ]
+  },
+  "probes": {
+    "totals": {
+      "summary": {
+        "answerable": 21,
+        "wrong": 0,
+        "no info": 0
+      },
+      "ir": {
+        "answerable": 14,
+        "wrong": 0,
+        "no info": 7
+      },
+      "header": {
+        "answerable": 10,
+        "wrong": 0,
+        "no info": 11
+      }
+    },
+    "n": 21,
+    "tokens": {
+      "summary": 427,
+      "header": 284,
+      "ir_avg": 376
+    }
+  }
+}

@@ -1,0 +1,662 @@
+<title>Context Compiler Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: compiler-explorer workbench. Source (transcript) on the left, compiler state on the right; tabs per pass. */
+:root {
+  --bg: #f4f6f9; --panel: #ffffff; --sunk: #eaeef4; --line: #d6dce6; --fg: #172030; --muted: #586379;
+  --accent: #2a4ccc; --define: #1d6fd0; --revise: #7b3fd1; --dropped: #c23a3a; --scope: #a86d12; --live: #2c8a4c;
+  --f-display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e121a; --panel: #151b25; --sunk: #1b2230; --line: #2a3344; --fg: #e3e8f1; --muted: #98a3b8;
+  --accent: #8fa8ff; --define: #6eaaff; --revise: #b591ff; --dropped: #ff8080; --scope: #e2ad55; --live: #62cf8a;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0e121a; --panel: #151b25; --sunk: #1b2230; --line: #2a3344; --fg: #e3e8f1; --muted: #98a3b8;
+  --accent: #8fa8ff; --define: #6eaaff; --revise: #b591ff; --dropped: #ff8080; --scope: #e2ad55; --live: #62cf8a;
+  color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 14px/1.5 var(--f-body); margin: 0; }
+.wrap { max-width: 1320px; margin: 0 auto; padding-inline: 20px; padding-block: 0 48px; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 600; text-wrap: balance; margin: 0; }
+h2 { font-size: 1.3rem; } h3 { font-size: 1.02rem; }
+code, .mono, pre { font-family: var(--f-mono); font-size: 12.5px; }
+pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.muted { color: var(--muted); }
+.label { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+button, select, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* top bar */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.bar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding-block: 12px; }
+.brand { display: flex; align-items: baseline; gap: 10px; margin-right: auto; }
+.brand h1 { font-size: 1.35rem; }
+.brand span { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+.ctl { display: flex; align-items: center; gap: 8px; }
+select { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; max-width: 100%; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg button { background: var(--panel); border: 0; padding: 5px 10px; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--panel); }
+nav.tabs { display: flex; gap: 2px; overflow-x: auto; }
+nav.tabs a { padding: 8px 14px; color: var(--muted); text-decoration: none; border-bottom: 2px solid transparent; white-space: nowrap; font-weight: 500; }
+nav.tabs a[aria-current="page"] { color: var(--fg); border-bottom-color: var(--accent); }
+
+/* summary strip */
+.strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; margin-block: 18px 10px; }
+.stat { background: var(--panel); padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.stat b { font-family: var(--f-display); font-size: 1.55rem; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1.15; }
+.stat small { color: var(--muted); }
+.note { font-size: 13px; color: var(--muted); margin-block: 0 18px; }
+
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; min-width: 0; }
+.stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.grid2 { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 900px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
+.lead { max-width: 72ch; margin: 6px 0 0; color: var(--muted); }
+section[data-tab] { display: flex; flex-direction: column; gap: 16px; }
+
+/* pills */
+.pill { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 500; white-space: nowrap;
+  border: 1px solid color-mix(in srgb, var(--c, var(--muted)) 45%, transparent); color: var(--c, var(--muted)); background: color-mix(in srgb, var(--c, var(--muted)) 10%, transparent); }
+.c-define { --c: var(--define); } .c-revise { --c: var(--revise); } .c-dropped { --c: var(--dropped); } .c-scope { --c: var(--scope); }
+.c-live { --c: var(--live); } .c-muted { --c: var(--muted); } .c-accent { --c: var(--accent); }
+
+/* pipeline ribbon */
+.ribbon { display: flex; flex-wrap: wrap; gap: 6px; align-items: stretch; }
+.pass { flex: 1 1 120px; border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; background: var(--panel); min-width: 0; }
+.pass .label { display: block; }
+.pass b { font-family: var(--f-display); font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+.pass small { display: block; color: var(--muted); font-size: 12px; }
+.pass.hot { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+
+/* stepper */
+.stepper { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.stepper input[type=range] { flex: 1 1 240px; accent-color: var(--accent); }
+.btn { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--panel); border-color: var(--accent); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* transcript */
+.source { max-height: 72vh; overflow-y: auto; padding-right: 4px; display: flex; flex-direction: column; gap: 10px; }
+.turn { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 10px; }
+.who { font-family: var(--f-mono); font-size: 11.5px; color: var(--muted); padding-top: 2px; }
+.turn.user .who { color: var(--accent); font-weight: 500; }
+.turn.assistant .body { color: var(--muted); }
+.body { line-height: 1.75; }
+.lx { cursor: pointer; border-radius: 3px; padding: 1px 2px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.lx:hover { outline: 1px solid var(--line); }
+.lx.f-define { background: color-mix(in srgb, var(--define) 16%, transparent); color: var(--fg); }
+.lx.f-revise { background: color-mix(in srgb, var(--revise) 18%, transparent); color: var(--fg); }
+.lx.f-retract { background: color-mix(in srgb, var(--dropped) 16%, transparent); color: var(--fg); }
+.lx.f-scope { background: color-mix(in srgb, var(--scope) 18%, transparent); color: var(--fg); }
+.lx.f-restate { text-decoration: underline dotted var(--define); text-underline-offset: 3px; }
+.lx.f-live { background: color-mix(in srgb, var(--live) 18%, transparent); color: var(--fg); }
+.lx.f-dead { background: color-mix(in srgb, var(--dropped) 16%, transparent); color: var(--fg); text-decoration: line-through color-mix(in srgb, var(--dropped) 60%, transparent); }
+.lx.future { opacity: .35; }
+.lx.cur { outline: 2px solid var(--accent); outline-offset: 1px; }
+.lx.code { font-family: var(--f-mono); font-size: 11.5px; }
+
+/* inspector */
+.verdict { display: flex; flex-direction: column; gap: 8px; }
+.quote { border-left: 3px solid var(--line); padding: 2px 0 2px 10px; }
+.kv { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 4px 10px; font-size: 13px; }
+.kv dt { color: var(--muted); } .kv dd { margin: 0; min-width: 0; }
+.scopestack { display: flex; flex-direction: column; gap: 4px; }
+.frame { border: 1px solid var(--line); border-radius: 5px; padding: 4px 8px; font-size: 13px; background: var(--sunk); }
+.frame:first-child { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 9%, var(--panel)); }
+.symlist { display: flex; flex-direction: column; gap: 6px; max-height: 34vh; overflow-y: auto; }
+.sym { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: baseline; font-size: 13px; }
+.sym .name { font-family: var(--f-mono); font-size: 12.5px; font-weight: 500; }
+.ver { font-family: var(--f-mono); font-size: 12px; padding: 0 6px; border-radius: 4px; background: var(--sunk); border: 1px solid var(--line); cursor: pointer; }
+.ver.killed { text-decoration: line-through; color: var(--muted); }
+.ver.new { border-color: var(--accent); }
+.arrow { color: var(--muted); font-size: 12px; }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; font-weight: 600; color: var(--muted); font-size: 12px; border-bottom: 1px solid var(--line); padding: 6px 8px; white-space: nowrap; }
+td { border-bottom: 1px solid var(--line); padding: 7px 8px; vertical-align: top; }
+td.num { font-variant-numeric: tabular-nums; text-align: right; }
+tr.sel td { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+.filters { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* scope tree */
+.tree { display: flex; flex-direction: column; gap: 4px; }
+.node { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
+.node.active { border-color: var(--accent); }
+.node .sid { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+.node .nm { font-weight: 600; }
+
+/* comparison */
+.bars { display: flex; flex-direction: column; gap: 10px; }
+.barrow { display: grid; grid-template-columns: 210px minmax(0, 1fr) 120px; gap: 10px; align-items: center; font-size: 13px; }
+.track { height: 18px; background: var(--sunk); border-radius: 4px; overflow: hidden; }
+.fill { height: 100%; background: var(--muted); border-radius: 4px; }
+.fill.ir { background: var(--accent); } .fill.sum { background: var(--revise); }
+.barrow .v { font-variant-numeric: tabular-nums; text-align: right; }
+@media (max-width: 640px) { .barrow { grid-template-columns: minmax(0, 1fr) 90px; } .barrow .track { grid-column: 1 / -1; grid-row: 2; } }
+.side { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 900px) { .side { grid-template-columns: minmax(0, 1fr); } }
+.artifact { background: var(--sunk); border-radius: 6px; padding: 12px; max-height: 420px; overflow: auto; }
+.prose p { margin: 0 0 10px; max-width: 70ch; }
+.empty { border: 1px dashed var(--line); border-radius: 8px; padding: 18px; color: var(--muted); }
+.findings { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; max-width: 90ch; }
+
+/* loader */
+.qrow { display: flex; gap: 8px; flex-wrap: wrap; }
+.qrow input { flex: 1 1 260px; min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 7px 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { background: var(--sunk); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; cursor: pointer; font-size: 13px; text-align: left; }
+.chip:hover { border-color: var(--accent); }
+.meter { display: flex; height: 14px; border-radius: 4px; overflow: hidden; background: var(--sunk); }
+.meter span { display: block; height: 100%; }
+.res { border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
+.log { display: flex; flex-direction: column; gap: 10px; }
+@media (prefers-reduced-motion: no-preference) { .fill, .meter span { transition: width .35s ease; } }
+</style>
+
+<div class="top"><div class="wrap">
+  <div class="bar">
+    <div class="brand"><h1>Context Compiler Explorer</h1><span>ctxc · transcript → Context IR</span></div>
+    <label class="ctl"><span class="label">Transcript</span><select id="sample"></select></label>
+    <div class="ctl"><span class="label">Reachability</span>
+      <div class="seg" role="group" aria-label="Reachability rule">
+        <button id="mode-strict" type="button" aria-pressed="true" title="The rule as written in the proposal">Strict</button>
+        <button id="mode-ablation" type="button" aria-pressed="false" title="Ablation: constraints treated as global declarations">Constraints global</button>
+      </div></div>
+  </div>
+  <nav class="tabs" aria-label="Views">
+    <a href="#step" data-tab="step">Step through</a>
+    <a href="#symbols" data-tab="symbols">Symbol table</a>
+    <a href="#scopes" data-tab="scopes">Scopes</a>
+    <a href="#compare" data-tab="compare">IR vs prose summary</a>
+    <a href="#loader" data-tab="loader">Loader</a>
+  </nav>
+</div></div>
+
+<main class="wrap">
+  <div class="strip" id="strip"></div>
+  <p class="note" id="note"></p>
+
+  <!-- STEP THROUGH -->
+  <section data-tab="step">
+    <div>
+      <h2>Watch the compiler read the conversation</h2>
+      <p class="lead">Each sentence is a lexeme. Drag the slider to replay the front end one lexeme at a time: the scope stack and symbol table on the right show the state right after that sentence. Reachability runs once, after the last lexeme.</p>
+    </div>
+    <div class="ribbon" id="ribbon"></div>
+    <div class="panel stack">
+      <div class="stepper">
+        <button class="btn" id="prev" type="button" aria-label="Previous lexeme">◀</button>
+        <button class="btn primary" id="play" type="button">Play</button>
+        <button class="btn" id="next" type="button" aria-label="Next lexeme">▶</button>
+        <input type="range" id="slider" min="0" value="0" aria-label="Lexeme position">
+        <button class="btn" id="nextfact" type="button">Next fact ▶▶</button>
+        <span class="mono muted" id="pos"></span>
+      </div>
+      <div class="stepper">
+        <span class="label">Colour by</span>
+        <div class="seg" role="group" aria-label="Colour sentences by">
+          <button id="color-action" type="button" aria-pressed="true">Front-end action</button>
+          <button id="color-verdict" type="button" aria-pressed="false">Final verdict</button>
+        </div>
+        <div class="legend" id="legend"></div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="panel"><div class="source" id="source"></div></div>
+      <div class="stack">
+        <div class="panel verdict" id="inspector"></div>
+        <div class="panel stack"><h3>Scope stack <span class="muted mono" style="font-weight:400">innermost first</span></h3><div class="scopestack" id="stackview"></div></div>
+        <div class="panel stack"><h3>Symbol table so far</h3><div class="symlist" id="symsofar"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SYMBOL TABLE -->
+  <section data-tab="symbols" hidden>
+    <div>
+      <h2>Symbol table with SSA versions</h2>
+      <p class="lead">Every fact is a symbol. A change creates a new version instead of overwriting, so <code>deadline.1</code> stays in the history and is marked as killed by <code>deadline.2</code>. The verdict column is the reachability pass for the selected rule. Click a version to see the sentence that defined it.</p>
+    </div>
+    <div class="filters" id="symfilters"></div>
+    <div class="panel tbl-wrap"><table id="symtable"></table></div>
+  </section>
+
+  <!-- SCOPES -->
+  <section data-tab="scopes" hidden>
+    <div>
+      <h2>Scope tree and the active chain</h2>
+      <p class="lead">Task phases become nested scopes, like blocks in a program. At the end of the transcript, the open scopes form the active chain. That chain is the root set for reachability: facts declared in closed scopes die unless they were used from the active chain.</p>
+    </div>
+    <div class="grid2">
+      <div class="panel stack"><h3>Scope tree</h3><div class="tree" id="tree"></div></div>
+      <div class="panel stack"><h3>Scope events</h3><div class="tbl-wrap"><table id="sevents"></table></div></div>
+    </div>
+  </section>
+
+  <!-- COMPARE -->
+  <section data-tab="compare" hidden>
+    <div>
+      <h2>Context IR vs prose-summary compaction</h2>
+      <p class="lead">Both artifacts hand the same conversation to a new session. The IR is produced by the compiler passes; the prose summary was written the way an LLM auto-compaction would summarise.</p>
+    </div>
+    <div class="panel stack"><h3>Token cost of the handoff</h3><div class="bars" id="bars"></div><p class="muted" id="tokennote" style="margin:0"></p></div>
+    <div class="panel stack"><h3>What this run shows</h3><ul class="findings" id="findings"></ul></div>
+    <div class="panel stack"><h3 id="rettitle">Facts that should survive</h3><div class="tbl-wrap"><table id="retention"></table></div></div>
+    <div class="panel stack"><h3>Things that should not be carried as current</h3><div class="tbl-wrap"><table id="notcur"></table></div></div>
+    <div class="side">
+      <div class="panel stack"><h3>Context IR header <span class="pill c-accent" id="irtok"></span></h3><div class="artifact"><pre id="irtext"></pre></div></div>
+      <div class="panel stack"><h3>Prose summary <span class="pill c-revise" id="sumtok"></span></h3><div class="artifact prose" id="sumtext"></div></div>
+    </div>
+    <div class="panel stack"><h3>Auditability</h3><div class="tbl-wrap"><table id="audit"></table></div></div>
+    <div class="side">
+      <div class="panel stack"><h3>IR: every dropped fact and its rule</h3><div class="tbl-wrap"><table id="drops"></table></div></div>
+      <div class="panel stack"><h3>Prose summary: the equivalent list</h3>
+        <div class="empty"><p style="margin:0 0 8px"><b>No list can be produced.</b> The summary is free text. Nothing in it records what was left out, which turn a sentence came from, or why something was omitted.</p>
+        <p style="margin:0" id="summissing"></p></div></div>
+    </div>
+  </section>
+
+  <!-- LOADER -->
+  <section data-tab="loader" hidden>
+    <div>
+      <h2>Loader: resolve symbols only when referenced</h2>
+      <p class="lead">A new session starts with just the IR header. When a message mentions a symbol by name, alias, value or a distinctive keyword, the loader expands that one symbol from the bundle: original sentences and version history. A dropped symbol can still be relinked, and the loader says which rule dropped it.</p>
+    </div>
+    <div class="panel stack">
+      <form class="qrow" id="qform"><label class="label" for="query" hidden>Message</label>
+        <input id="query" placeholder="Type a follow-up message, e.g. what's the deadline again?" autocomplete="off">
+        <button class="btn primary" type="submit">Send</button>
+        <button class="btn" type="button" id="qreset">Reset session</button></form>
+      <div class="chips" id="qchips"></div>
+      <div class="stack" style="gap:6px"><div class="meter" id="meter"></div><div class="muted" id="metertext"></div></div>
+    </div>
+    <div class="log" id="qlog"></div>
+  </section>
+</main>
+
+<script>
+const DATA = /*__DATA__*/null;
+
+/* ---------- helpers ---------- */
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const pill = (txt, cls, title) => `<span class="pill ${cls}"${title ? ` title="${esc(title)}"` : ""}>${esc(txt)}</span>`;
+const locKey = (loc) => { const [t, s] = loc.slice(1).split("."); return +t * 100000 + +s; };
+const pct = (n, d) => (100 * n / d).toFixed(1) + "%";
+const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+                set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+
+const RULES = {
+  "P-COPULA": "Matched “the KEY is VALUE”.",
+  "P-COPULA-STRONG": "Matched “the KEY will be / is now VALUE”.",
+  "P-ASSIGN": "Matched “change / set / rename the KEY to VALUE”.",
+  "P-CHOICE": "Matched “let's use / we'll go with VALUE (for KEY)”.",
+  "P-SWITCH": "Matched “switch from OLD to NEW”: found the symbol whose current value is OLD and gave it a new version.",
+  "P-DECIDE": "Matched “we decided / agreed …”.",
+  "P-CONSTRAINT": "Matched “SUBJECT must / should / cannot …”.",
+  "P-CONSTRAINT-IMP": "Matched an imperative rule (“never …”, “always …”, “don't …”).",
+  "P-CONSTRAINT-KW": "Matched a limit keyword (deadline, max, at least) with a number.",
+  "P-NAME": "Matched “let's call it VALUE”.",
+  "P-KV": "Matched a “Key: value” line.",
+  "P-RETRACT": "Matched “forget about / drop X” and found the symbol X.",
+  "P-PIN": "Marked important by the user (“Important: …”, “Remember that …”), so it is pinned live.",
+  "P-ACCEPT": "The user accepted the assistant's proposal.",
+  "S-DIRECTIVE": "Scope directive: a task phase opened, closed or resumed.",
+  "E-QUESTION": "A question. Questions are proposals, not settled facts.",
+  "E-EXPLORATORY": "Hedged or exploratory (“maybe”, “what if”, “I was thinking”). Not a decision.",
+  "E-ACK": "An acknowledgement (“ok”, “sounds good”). Carries no fact.",
+  "E-FILLER": "User sentence that matched no fact pattern. Some of these are real facts the rules miss.",
+  "E-NARRATIVE": "Assistant explanation. Only explicit statements like “I've changed X to Y” are taken from assistant text.",
+  "E-PROPOSAL": "Assistant proposal, remembered in case the user accepts it next.",
+  "E-CODE": "Code block. Kept in the backing store, never parsed for facts.",
+  "L-SCOPE": "Declared or assigned in a scope on the active chain.",
+  "L-USE": "Used (by name or value) from an active scope after its definition, so it escaped its scope.",
+  "L-REF": "Mentioned by the value of another live symbol.",
+  "L-PIN": "Pinned by the user.",
+  "L-GLOBAL": "Ablation: constraints are treated as global declarations.",
+  "R-SSA": "Dead store: a later version replaced it.",
+  "R-KILL": "Explicitly retracted by the user.",
+  "R-SCOPE": "Declared in a scope that closed, and never used from the active chain.",
+};
+const ruleText = (r) => {
+  if (!r) return "";
+  const parts = r.split("+").filter(Boolean);
+  return parts.map((p) => RULES[p.replace(/\(.*\)/, "")] || p).join(" Then: ");
+};
+const OPCLS = { define: "c-define", revise: "c-revise", restate: "c-define", retract: "c-dropped", scope: "c-scope" };
+const KIND = { decision: "decision", constraint: "constraint", choice: "choice", fact: "fact" };
+
+/* ---------- state ---------- */
+const S = { sample: 0, mode: "strict", step: 0, color: "action", symFilter: "all", playing: null, session: null };
+const cur = () => DATA.samples[S.sample];
+const cfg = () => cur().configs[S.mode];
+
+/* ---------- strip ---------- */
+function liveCount(mode) { return cur().gold.live.filter((g) => g[mode].in_header).length; }
+function renderStrip() {
+  const sm = cur(), t = sm.tokens, n = sm.gold.live.length, c = cfg();
+  const nDrop = c.dropped.length, sumKept = sm.gold.live.filter((g) => g.summary).length;
+  $("strip").innerHTML = [
+    ["Full transcript", t.full, "tokens"],
+    ["Prose summary", t.summary, `tokens · ${pct(t.summary, t.full)} of transcript`],
+    ["Context IR header", t[S.mode], `tokens · ${pct(t[S.mode], t.full)} of transcript`],
+    ["Expected facts kept", `${sumKept} vs ${liveCount(S.mode)}`, `of ${n}: prose summary vs IR`],
+    ["IR drops with a rule", nDrop, `${Object.entries(c.drop_counts).map(([k, v]) => k + " " + v).join(", ") || "none"}`],
+  ].map(([l, b, s]) => `<div class="stat"><span class="label">${l}</span><b>${b}</b><small>${esc(s)}</small></div>`).join("");
+  $("note").textContent = sm.note + ` Token counts: ${DATA.tokenizer}.`;
+}
+
+/* ---------- step through ---------- */
+function fateOf(lx) {
+  if (lx.kind === "CODE") return { cls: "code", label: "code" };
+  if (lx.events.length) {
+    const e = lx.events.find((x) => x.op !== "restate") || lx.events[0];
+    return { cls: "f-" + e.op, op: e.op, ev: e };
+  }
+  return { cls: "", discard: lx.discard };
+}
+function verdictOf(lx) {
+  const e = lx.events.find((x) => x.op === "define" || x.op === "revise");
+  if (!e) return null;
+  const [name, n] = [e.ssa.slice(0, e.ssa.lastIndexOf(".")), +e.ssa.slice(e.ssa.lastIndexOf(".") + 1)];
+  const sym = cfg().symbols[name];
+  if (!sym) return null;
+  if (sym.live && n === sym.versions.length) return { live: true, rule: sym.live_rule, why: sym.live_why, ssa: e.ssa };
+  const d = cfg().dropped.find((x) => x.ssa === e.ssa);
+  return { live: false, rule: d ? d.rule : "?", why: d ? d.justification : "", ssa: e.ssa };
+}
+function renderLegend() {
+  $("legend").innerHTML = S.color === "action"
+    ? pill("defines a symbol", "c-define") + pill("new SSA version", "c-revise") + pill("retraction", "c-dropped") + pill("scope change", "c-scope") + pill("no fact (discarded)", "c-muted")
+    : pill("value survives into the IR", "c-live") + pill("value dropped by a rule", "c-dropped");
+}
+function renderSource() {
+  const sm = cur();
+  const byTurn = new Map();
+  sm.lexemes.forEach((lx, i) => { if (!byTurn.has(lx.turn)) byTurn.set(lx.turn, []); byTurn.get(lx.turn).push([lx, i]); });
+  $("source").innerHTML = sm.turns.map((t) => {
+    const lxs = byTurn.get(t.i) || [];
+    return `<div class="turn ${t.role}"><div class="who">t${t.i} ${t.role === "user" ? "user" : "asst"}</div><div class="body">${
+      lxs.map(([lx, i]) => {
+        let cls = "lx";
+        if (S.color === "action") cls += " " + fateOf(lx).cls;
+        else { const v = verdictOf(lx); if (v) cls += v.live ? " f-live" : " f-dead"; }
+        if (lx.kind === "CODE") cls += " code";
+        const txt = lx.kind === "CODE" ? "[code block]" : (lx.kind === "HEADING" ? "# " : lx.kind === "ITEM" ? "• " : "") + lx.text;
+        return `<span class="${cls}" data-i="${i}" id="lx-${i}">${esc(txt)}</span>`;
+      }).join(" ")}</div></div>`;
+  }).join("");
+  markStep(false);
+}
+function markStep(scroll) {
+  const sm = cur(), i = S.step;
+  document.querySelectorAll("#source .lx").forEach((el) => {
+    const k = +el.dataset.i;
+    el.classList.toggle("future", k > i);
+    el.classList.toggle("cur", k === i);
+  });
+  if (scroll) { const el = $("lx-" + i); if (el) el.scrollIntoView({ block: "nearest" }); }
+  $("slider").value = i;
+  $("pos").textContent = `${sm.lexemes[i].loc} · ${i + 1}/${sm.lexemes.length}`;
+  renderInspector(); renderStackView(); renderSymSoFar(); renderRibbon();
+}
+function renderInspector() {
+  const lx = cur().lexemes[S.step], f = fateOf(lx);
+  let html = `<div class="label">Lexeme ${lx.loc} · ${lx.role} · ${lx.kind.toLowerCase()}</div>
+    <div class="quote">${lx.kind === "CODE" ? `<pre>${esc(lx.text.slice(0, 400))}</pre>` : esc(lx.text)}</div>`;
+  if (lx.events.length) {
+    html += lx.events.map((e) => `<div>${pill(e.op, OPCLS[e.op] || "c-muted")} <code>${esc(e.ssa)}</code>
+      <span class="muted mono">${esc(e.rule)}</span><div class="muted" style="font-size:13px">${esc(ruleText(e.rule))}</div></div>`).join("");
+  } else if (lx.discard) {
+    html += `<div>${pill("discarded", "c-muted")} <span class="muted mono">${lx.discard}</span><div class="muted" style="font-size:13px">${esc(ruleText(lx.discard))}</div></div>`;
+  }
+  const v = verdictOf(lx);
+  if (v) html += `<div>${pill(v.live ? "in the IR" : "dropped", v.live ? "c-live" : "c-dropped")} <span class="mono muted">${v.rule}</span>
+    <div class="muted" style="font-size:13px">Final verdict (after the last lexeme): ${esc(v.why || ruleText(v.rule))}</div></div>`;
+  $("inspector").innerHTML = html;
+}
+function scopeName(id) { const s = cfg().scopes.find((x) => x.id === id); return s ? s.name : id; }
+function renderStackView() {
+  const st = cur().lexemes[S.step].stack.slice().reverse();
+  $("stackview").innerHTML = st.map((id) => `<div class="frame"><span class="mono muted">${id}</span> ${esc(scopeName(id))}</div>`).join("");
+}
+function renderSymSoFar() {
+  const k = locKey(cur().lexemes[S.step].loc), syms = cfg().symbols, out = [];
+  const last = S.step === cur().lexemes.length - 1;
+  for (const [name, s] of Object.entries(syms)) {
+    const vs = s.versions.filter((v) => locKey(v.loc) <= k);
+    if (!vs.length) continue;
+    const retracted = s.retracted_at && locKey(s.retracted_at) <= k;
+    const chips = vs.map((v, j) => {
+      const killed = j < vs.length - 1 || retracted;
+      const isNew = v.loc === cur().lexemes[S.step].loc;
+      return `<span class="ver${killed ? " killed" : ""}${isNew ? " new" : ""}" data-loc="${v.loc}" title="${v.loc}">${esc(name)}.${v.n} = ${esc(v.value.length > 48 ? v.value.slice(0, 46) + "…" : v.value)}</span>`;
+    }).join('<span class="arrow">→</span>');
+    let status = retracted ? pill("retracted", "c-dropped") : "";
+    if (last) status = s.live ? pill("live · " + s.live_rule, "c-live") : pill("dropped", "c-dropped");
+    out.push(`<div class="sym">${chips} ${status}</div>`);
+  }
+  $("symsofar").innerHTML = out.length ? out.join("") : '<div class="muted">No symbols yet.</div>';
+}
+function renderRibbon() {
+  const sm = cur(), c = cfg(), lx = sm.lexemes[S.step];
+  const nSym = Object.keys(c.symbols).length, nVer = Object.values(c.symbols).reduce((a, s) => a + s.versions.length, 0);
+  const nLive = Object.values(c.symbols).filter((s) => s.live).length;
+  const ev = lx.events[0];
+  const hot = lx.kind === "CODE" || (!lx.events.length) ? "front" : ev.op === "scope" ? "scopes" : "symtab";
+  const passes = [
+    ["lexer", "Lexer", sm.lexemes.length, "lexemes from " + sm.turns.length + " turns"],
+    ["front", "Front end", Object.values(c.discard_counts).reduce((a, b) => a + b, 0), "lexemes discarded by a rule"],
+    ["symtab", "Symbol table", nSym, nVer + " SSA versions"],
+    ["scopes", "Scope stack", c.scopes.length, "scopes, " + c.active_chain.length + " on active chain"],
+    ["reach", "Reachability", nLive, "live · " + c.dropped.length + " dropped"],
+    ["const", "Constant pool", c.constants.length, "constants · " + c.variables.length + " versioned"],
+    ["ir", "IR header", cur().tokens[S.mode], "tokens"],
+  ];
+  $("ribbon").innerHTML = passes.map(([id, l, b, s]) => `<div class="pass${id === hot ? " hot" : ""}"><span class="label">${l}</span><b>${b}</b><small>${esc(s)}</small></div>`).join("");
+}
+function setStep(i, scroll = true) {
+  const n = cur().lexemes.length;
+  S.step = Math.max(0, Math.min(n - 1, i)); markStep(scroll);
+}
+function stopPlay() { if (S.playing) { clearInterval(S.playing); S.playing = null; $("play").textContent = "Play"; } }
+
+/* ---------- symbol table ---------- */
+function renderSymbols() {
+  const c = cfg(), rows = Object.entries(c.symbols);
+  const counts = { all: rows.length, live: rows.filter(([, s]) => s.live).length };
+  counts.dropped = counts.all - counts.live;
+  $("symfilters").innerHTML = ["all", "live", "dropped"].map((f) =>
+    `<button class="chip" type="button" data-f="${f}" aria-pressed="${S.symFilter === f}" style="${S.symFilter === f ? "border-color:var(--accent);color:var(--accent)" : ""}">${f[0].toUpperCase() + f.slice(1)} · ${counts[f]}</button>`).join("");
+  const dropBy = {}; c.dropped.forEach((d) => (dropBy[d.symbol] = dropBy[d.symbol] || []).push(d));
+  const body = rows.filter(([, s]) => S.symFilter === "all" || (S.symFilter === "live") === s.live).map(([name, s]) => {
+    const vers = s.versions.map((v) => `<span class="ver${v.killed_by ? " killed" : ""}" data-loc="${v.loc}" title="defined at ${v.loc} in ${v.scope}${v.killed_by ? "; killed by " + v.killed_by : ""}">.${v.n} ${esc(v.value)}</span>`).join('<span class="arrow"> → </span>');
+    const own = (dropBy[name] || []).filter((d) => d.rule !== "R-SSA");
+    const verdict = s.live ? pill("live · " + s.live_rule, "c-live", ruleText(s.live_rule)) : pill("dropped · " + (own[0] ? own[0].rule : "?"), "c-dropped", own[0] ? ruleText(own[0].rule) : "");
+    const why = s.live ? s.live_why : (own[0] ? own[0].justification : "");
+    return `<tr><td><code>${esc(name)}</code>${s.pinned ? " " + pill("pinned", "c-accent") : ""}</td><td>${KIND[s.kind] || s.kind}</td><td>${vers}</td><td>${verdict}</td><td class="muted">${esc(why)}</td></tr>`;
+  }).join("");
+  $("symtable").innerHTML = `<thead><tr><th>Symbol</th><th>Kind</th><th>Versions (oldest → current)</th><th>Verdict</th><th>Why</th></tr></thead><tbody>${body}</tbody>`;
+}
+
+/* ---------- scopes ---------- */
+function renderScopes() {
+  const c = cfg(), chain = c.active_chain, syms = Object.values(c.symbols);
+  $("tree").innerHTML = c.scopes.map((s) => {
+    const decl = syms.filter((x) => x.versions[0].scope === s.id);
+    const live = decl.filter((x) => x.live).length;
+    const state = s.active ? (s.id === chain[0] ? pill("current", "c-accent") : pill("active", "c-live")) : pill("closed " + (s.closed_at || ""), "c-muted");
+    return `<div class="node${s.active ? " active" : ""}" style="margin-left:${s.depth * 22}px"><span class="sid">${s.id}</span><span class="nm">${esc(s.name)}</span>${state}
+      <span class="muted" style="font-size:12px">opened ${s.opened_at} · ${decl.length} symbol${decl.length === 1 ? "" : "s"} declared, ${live} live</span></div>`;
+  }).join("") + `<p class="muted" style="margin:8px 0 0">Active chain (root set): <code>${chain.join(" → ")}</code></p>`;
+  $("sevents").innerHTML = `<thead><tr><th>At</th><th>Event</th><th>Scope</th></tr></thead><tbody>${
+    c.scope_events.map((e) => `<tr><td><span class="ver" data-loc="${e.loc}">${e.loc}</span></td><td>${pill(e.op, e.op === "close" ? "c-muted" : "c-scope")}</td><td><span class="mono muted">${e.scope}</span> ${esc(scopeName(e.scope))}</td></tr>`).join("")}</tbody>`;
+}
+
+/* ---------- compare ---------- */
+function fateCell(f) {
+  if (f.status === "carried") return pill("carried", "c-live") + (f.symbol ? ` <code>${esc(f.symbol)}</code> <span class="muted mono">${f.rule || ""}</span>` : "");
+  if (f.status === "dropped") return pill("dropped", "c-dropped") + ` <code>${esc(f.symbol)}</code> <span class="muted mono">${f.rule}</span>`;
+  if (f.status === "extracted") return pill("extracted, not in header", "c-scope") + ` <code>${esc(f.symbol)}</code>`;
+  return pill("not extracted", "c-muted", "The front-end rules never turned this into a symbol.");
+}
+function renderCompare() {
+  const sm = cur(), t = sm.tokens, c = cfg();
+  const rows = [["Full transcript", t.full, ""], ["Prose summary", t.summary, "sum"], ["IR header · strict", t.strict, "ir"], ["IR header · constraints global", t.ablation, "ir"]];
+  $("bars").innerHTML = rows.map(([l, v, cls]) => `<div class="barrow"><span>${l}</span><div class="track"><div class="fill ${cls}" style="width:${(100 * v / t.full).toFixed(2)}%"></div></div><span class="v">${v} · ${pct(v, t.full)}</span></div>`).join("");
+  $("tokennote").textContent = `Bars are to scale against the full transcript. The IR bundle (symbol table, audit log and original text) is not loaded up front; the loader reads from it on demand. Counter: ${DATA.tokenizer}.`;
+
+  const n = sm.gold.live.length, sumK = sm.gold.live.filter((g) => g.summary).length;
+  const sK = liveCount("strict"), aK = liveCount("ablation");
+  const missed = sm.gold.live.filter((g) => g[S.mode].status === "missed").length;
+  const scopeDrops = sm.gold.live.filter((g) => g[S.mode].status === "dropped" && g[S.mode].rule === "R-SCOPE").length;
+  const smaller = t[S.mode] < t.summary;
+  $("findings").innerHTML = [
+    `The IR header is ${smaller ? "smaller" : "larger"} than the prose summary: ${t[S.mode]} vs ${t.summary} tokens (${pct(t[S.mode], t.full)} vs ${pct(t.summary, t.full)} of the transcript).`,
+    `But it keeps fewer of the facts that matter: ${S.mode === "strict" ? sK : aK} of ${n} vs ${sumK} of ${n} for the summary. So it is not a summary “of equivalent fidelity”.`,
+    `${missed} expected fact${missed === 1 ? " was" : "s were"} never extracted by the front-end rules, and ${scopeDrops} ${scopeDrops === 1 ? "was" : "were"} extracted but dropped by R-SCOPE because its phase closed.`,
+    `Where the IR wins is auditability: every dropped fact below has a rule and a source location, and stale values are separated from current ones by SSA versions.`,
+    `Switch the reachability rule at the top to compare: treating constraints as global keeps ${aK}/${n} facts (strict keeps ${sK}/${n}) but can also keep constraints from abandoned sub-topics.`,
+  ].map((x) => `<li>${esc(x)}</li>`).join("");
+
+  $("rettitle").textContent = `Facts that should survive · summary ${sumK}/${n} · IR strict ${sK}/${n} · IR constraints global ${aK}/${n}`;
+  const cell = (b) => b ? pill("✓ present", "c-live") : pill("✗ absent", "c-dropped");
+  $("retention").innerHTML = `<thead><tr><th>Expected fact (hand-written gold list)</th><th>Prose summary</th><th>IR · strict</th><th>IR · constraints global</th></tr></thead><tbody>${
+    sm.gold.live.map((g) => `<tr><td>${esc(g.desc)}</td><td>${cell(g.summary)}</td><td>${fateCell(g.strict)}</td><td>${fateCell(g.ablation)}</td></tr>`).join("")}</tbody>`;
+  const ment = (b) => b ? pill("mentioned", "c-scope") : pill("absent", "c-live");
+  const nc = [...sm.gold.dropped.map((g) => ["abandoned or retracted", g]), ...sm.gold.stale.map((g) => ["stale value", g])];
+  $("notcur").innerHTML = `<thead><tr><th>Item</th><th>Prose summary</th><th>IR · strict</th><th>IR · constraints global</th></tr></thead><tbody>${
+    nc.map(([k, g]) => `<tr><td>${esc(g.desc)} <span class="muted">(${k})</span></td><td>${ment(g.summary)}</td><td>${ment(g.strict.in_header)} ${fateCell(g.strict)}</td><td>${ment(g.ablation.in_header)} ${fateCell(g.ablation)}</td></tr>`).join("")}</tbody>
+    <caption style="caption-side:bottom;text-align:left;padding-top:8px" class="muted">A summary that mentions an old value is not wrong if it says “moved from X”, but the reader has to parse the prose to know which value is current.</caption>`;
+
+  $("irtext").textContent = c.header; $("irtok").textContent = t[S.mode] + " tokens";
+  $("sumtext").innerHTML = sm.summary.split(/\n\s*\n/).map((p) => `<p>${esc(p)}</p>`).join(""); $("sumtok").textContent = t.summary + " tokens";
+
+  const nLex = sm.lexemes.length, fated = sm.lexemes.filter((l) => l.events.length || l.discard).length;
+  const A = [
+    ["List of dropped facts, each with the rule that dropped it", `Yes · ${c.dropped.length} entries`, "No"],
+    ["Sentences whose fate is recorded (became a symbol, or discarded by a named rule)", `${fated} / ${nLex}`, `0 / ${nLex}`],
+    ["Link from each fact to the sentence it came from", "Yes · every version has a location like t52.1", "No"],
+    ["Current value distinguishable from old values", "Structurally: deadline.2 is current, deadline.1 dropped by R-SSA", "Only by reading the prose"],
+    ["A dropped item can be brought back later", "Yes · the loader relinks it from the bundle", "No"],
+    ["Expected facts carried (this sample)", `${S.mode === "strict" ? sK : aK} / ${n}`, `${sumK} / ${n}`],
+  ];
+  $("audit").innerHTML = `<thead><tr><th>Question</th><th>Context IR</th><th>Prose summary</th></tr></thead><tbody>${
+    A.map(([q, a, b]) => `<tr><td>${q}</td><td>${esc(a)}</td><td>${esc(b)}</td></tr>`).join("")}</tbody>`;
+  $("drops").innerHTML = `<thead><tr><th>Version</th><th>Value</th><th>Rule</th><th>Justification</th></tr></thead><tbody>${
+    c.dropped.map((d) => `<tr><td><span class="ver killed" data-loc="${d.loc}">${esc(d.ssa)}</span></td><td>${esc(d.value)}</td><td>${pill(d.rule, "c-dropped", ruleText(d.rule))}</td><td class="muted">${esc(d.justification)}</td></tr>`).join("") ||
+    '<tr><td colspan="4" class="muted">Nothing was dropped.</td></tr>'}</tbody>`;
+  const miss = sm.gold.live.filter((g) => !g.summary).map((g) => g.desc);
+  $("summissing").textContent = miss.length
+    ? `Checking against the external gold list shows it is missing: ${miss.join("; ")}. The summary itself cannot tell you this.`
+    : "Checked against the external gold list, this summary happens to miss nothing. That check needed the external list; the summary itself could not have reported it.";
+}
+
+/* ---------- loader ---------- */
+const STOP = new Set(("the a an our my your their its this that these those his her we us i new current final of for to in on and or with is be it as at by from will should would can all any just so then also not no do dont please let lets").split(" "));
+const words = (s) => (String(s).toLowerCase().replace(/'/g, "").match(/[a-z0-9]+/g) || []);
+const norm = (s) => words(s).join(" ");
+const contentWords = (s) => words(s).filter((w) => !STOP.has(w) && w.length > 1);
+const reEsc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function references(q) {
+  const c = cfg(), qn = " " + norm(q) + " ", qw = new Set(contentWords(q)), found = [];
+  for (const [name, s] of Object.entries(c.symbols)) {
+    let how = null;
+    if (new RegExp("\\b" + reEsc(name) + "(?:\\.\\d+)?\\b").test(q)) how = new RegExp("\\b" + reEsc(name) + "\\.\\d+\\b").test(q) ? "ssa" : "name";
+    else if (name.length >= 4 && qn.includes(" " + name.replace(/_/g, " ") + " ")) how = "name";
+    else if (s.aliases.some((a) => a.length >= 4 && qn.includes(" " + a.replace(/_/g, " ") + " "))) how = "alias";
+    else {
+      for (const v of s.versions.slice().reverse()) { const vn = norm(v.value); if (vn.length >= 4 && vn.split(" ").length <= 8 && qn.includes(" " + vn + " ")) { how = "value"; break; } }
+      if (!how && (c.distinctive[name] || []).some((w) => qw.has(w))) how = "keyword";
+    }
+    if (how) found.push([name, how]);
+  }
+  return found;
+}
+function newSession() { S.session = { resolved: new Set(), expanded: 0, log: [] }; }
+function sendQuery(q) {
+  q = q.trim(); if (!q) return;
+  const c = cfg(), res = [];
+  for (const [name, how] of references(q)) {
+    if (S.session.resolved.has(name)) continue;
+    S.session.resolved.add(name);
+    const r = c.resolve[name]; S.session.expanded += r.tokens;
+    res.push({ name, how, live: c.symbols[name].live, text: r.text, tokens: r.tokens });
+  }
+  S.session.log.unshift({ q, res });
+  renderLoader();
+}
+function renderLoader() {
+  const sm = cur(), c = cfg(), H = c.header_tokens, E = S.session.expanded, T = sm.tokens.full;
+  $("qchips").innerHTML = '<span class="label" style="align-self:center">Try</span>' + sm.queries.map((q) => `<button class="chip" type="button">${esc(q)}</button>`).join("");
+  $("meter").innerHTML = `<span style="width:${(100 * H / T).toFixed(2)}%;background:var(--accent)" title="header"></span><span style="width:${(100 * E / T).toFixed(2)}%;background:var(--scope)" title="expansions"></span>`;
+  $("metertext").innerHTML = `${pill("header " + H, "c-accent")} + ${pill("expanded " + E, "c-scope")} = <b>${H + E}</b> tokens loaded, vs ${T} to re-read the whole transcript (${pct(H + E, T)}).`;
+  $("qlog").innerHTML = S.session.log.length ? S.session.log.map((e) => `<div class="panel stack"><div><span class="label">You</span> ${esc(e.q)}</div>${
+    e.res.length ? e.res.map((r) => `<div class="res"><div>${pill(r.live ? "live" : "dropped, relinked", r.live ? "c-live" : "c-dropped")} <code>${esc(r.name)}</code> <span class="muted">matched by ${r.how} · +${r.tokens} tokens</span></div><pre>${esc(r.text)}</pre></div>`).join("")
+    : '<div class="muted">No symbol referenced, so nothing was expanded. The new session answers from the header alone (or a symbol was already resolved earlier in this session).</div>'}</div>`).join("")
+    : '<div class="empty">Send a message or pick one of the sample queries. Only the symbols it mentions get expanded.</div>';
+}
+
+/* ---------- tabs, wiring ---------- */
+const TABS = ["step", "symbols", "scopes", "compare", "loader"];
+function showTab(t) {
+  if (!TABS.includes(t)) t = "step";
+  document.querySelectorAll("section[data-tab]").forEach((s) => (s.hidden = s.dataset.tab !== t));
+  document.querySelectorAll("nav.tabs a").forEach((a) => { if (a.dataset.tab === t) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+}
+function jumpToLoc(loc) {
+  const i = cur().lexemes.findIndex((l) => l.loc === loc);
+  if (i < 0) return;
+  location.hash = "step"; showTab("step"); setStep(i);
+}
+function renderAll() {
+  renderStrip(); renderLegend(); renderSource(); renderSymbols(); renderScopes(); renderCompare(); newSession(); renderLoader();
+}
+function init() {
+  $("sample").innerHTML = DATA.samples.map((s, i) => `<option value="${i}">${esc(s.title)}</option>`).join("");
+  const saved = store.get("ctxc.mode"); if (saved === "ablation") S.mode = "ablation";
+  $("sample").addEventListener("change", (e) => { stopPlay(); S.sample = +e.target.value; S.step = cur().lexemes.length - 1; $("slider").max = cur().lexemes.length - 1; renderAll(); });
+  const setMode = (m) => { S.mode = m; store.set("ctxc.mode", m); $("mode-strict").setAttribute("aria-pressed", m === "strict"); $("mode-ablation").setAttribute("aria-pressed", m === "ablation"); renderAll(); };
+  $("mode-strict").onclick = () => setMode("strict"); $("mode-ablation").onclick = () => setMode("ablation");
+  const setColor = (c) => { S.color = c; $("color-action").setAttribute("aria-pressed", c === "action"); $("color-verdict").setAttribute("aria-pressed", c === "verdict"); renderLegend(); renderSource(); };
+  $("color-action").onclick = () => setColor("action"); $("color-verdict").onclick = () => setColor("verdict");
+  $("slider").addEventListener("input", (e) => { stopPlay(); setStep(+e.target.value); });
+  $("prev").onclick = () => { stopPlay(); setStep(S.step - 1); };
+  $("next").onclick = () => { stopPlay(); setStep(S.step + 1); };
+  $("nextfact").onclick = () => {
+    stopPlay(); const L = cur().lexemes;
+    let i = L.findIndex((l, k) => k > S.step && l.events.length); if (i < 0) i = L.findIndex((l) => l.events.length);
+    setStep(i);
+  };
+  $("play").onclick = () => {
+    if (S.playing) return stopPlay();
+    if (S.step >= cur().lexemes.length - 1) setStep(0);
+    $("play").textContent = "Pause";
+    S.playing = setInterval(() => { if (S.step >= cur().lexemes.length - 1) return stopPlay(); setStep(S.step + 1); }, 450);
+  };
+  $("source").addEventListener("click", (e) => { const el = e.target.closest(".lx"); if (el) { stopPlay(); setStep(+el.dataset.i, false); } });
+  document.addEventListener("click", (e) => { const v = e.target.closest(".ver[data-loc]"); if (v) jumpToLoc(v.dataset.loc); });
+  $("symfilters").addEventListener("click", (e) => { const b = e.target.closest("[data-f]"); if (b) { S.symFilter = b.dataset.f; renderSymbols(); } });
+  $("qform").addEventListener("submit", (e) => { e.preventDefault(); sendQuery($("query").value); $("query").value = ""; });
+  $("qreset").onclick = () => { newSession(); renderLoader(); };
+  $("qchips").addEventListener("click", (e) => { const b = e.target.closest("button.chip"); if (b) sendQuery(b.textContent); });
+  window.addEventListener("hashchange", () => showTab(location.hash.slice(1)));
+  document.querySelector("nav.tabs").addEventListener("click", (e) => { const a = e.target.closest("a[data-tab]"); if (a) showTab(a.dataset.tab); });
+  $("mode-strict").setAttribute("aria-pressed", S.mode === "strict"); $("mode-ablation").setAttribute("aria-pressed", S.mode === "ablation");
+  S.step = cur().lexemes.length - 1; $("slider").max = cur().lexemes.length - 1;
+  renderAll(); showTab(location.hash.slice(1));
+}
+init();
+</script>

@@ -1,0 +1,11 @@
+Summary of the conversation so far:
+
+The user is an organiser of their college hackathon, HackVIT, expecting around 300 participants in teams of up to 4. It is a 24-hour event starting Saturday morning, held in Anna Auditorium (extra tables and extension cords may be needed). The date was moved from 14 February to 21 February so it falls a week after mid-sem exams end.
+
+Budget: ₹2 lakh total, with food capped at ₹90,000. Merch (hoodies, a student designer) was discussed but skipped for now, to revisit only if money is left over.
+
+Schedule: registration and breakfast Saturday 8:00, hacking from 10:00 Saturday to 10:00 Sunday, then judging and a closing ceremony with prizes. Submissions go through Devpost. A YouTube livestream of the closing ceremony was planned but dropped because the auditorium Wi-Fi can't handle it.
+
+Sponsors: Zoho is the title sponsor; all sponsors must be confirmed by 31 January so banners can be printed. Suggested tiers were Gold/Silver/Bronze.
+
+Judging and prizes: prizes are ₹30,000, ₹20,000 and ₹10,000; there will be 4 judges; criteria are innovation, technical difficulty and presentation, equally weighted. The user's latest question is how to run the first round of judging efficiently.

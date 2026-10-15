@@ -1,0 +1,4 @@
+ok, what should the first paragraph of related work say?
+what RMSE did XGBoost get?
+how are we splitting train and test?
+are we including the SHAP plot?

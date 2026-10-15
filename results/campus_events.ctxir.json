@@ -1,0 +1,2607 @@
+{
+ "format": "ctxir/1",
+ "meta": {
+  "source": "samples/campus_events_chat.txt",
+  "sha256": "e9e195e7b6f75cb3",
+  "turns": 69,
+  "lexemes": 161,
+  "tokenizer": "approx (word-piece heuristic)",
+  "restatements_folded": 0
+ },
+ "scopes": [
+  {
+   "id": "s0",
+   "name": "conversation",
+   "parent": null,
+   "depth": 0,
+   "opened_at": "t0.0",
+   "closed_at": null,
+   "active": true
+  },
+  {
+   "id": "s1",
+   "name": "requirements",
+   "parent": "s0",
+   "depth": 1,
+   "opened_at": "t8.0",
+   "closed_at": "t16.0",
+   "active": false
+  },
+  {
+   "id": "s2",
+   "name": "tech stack",
+   "parent": "s0",
+   "depth": 1,
+   "opened_at": "t16.1",
+   "closed_at": "t56.0",
+   "active": false
+  },
+  {
+   "id": "s3",
+   "name": "hosting the mobile push notifications part",
+   "parent": "s2",
+   "depth": 2,
+   "opened_at": "t24.0",
+   "closed_at": "t28.1",
+   "active": false
+  },
+  {
+   "id": "s4",
+   "name": "data model",
+   "parent": "s2",
+   "depth": 2,
+   "opened_at": "t28.1",
+   "closed_at": "t40.0",
+   "active": false
+  },
+  {
+   "id": "s5",
+   "name": "API design",
+   "parent": "s2",
+   "depth": 2,
+   "opened_at": "t40.0",
+   "closed_at": "t56.0",
+   "active": false
+  },
+  {
+   "id": "s6",
+   "name": "testing and deployment",
+   "parent": "s0",
+   "depth": 1,
+   "opened_at": "t56.0",
+   "closed_at": null,
+   "active": true
+  },
+  {
+   "id": "s7",
+   "name": "PM2 setup on the server",
+   "parent": "s6",
+   "depth": 2,
+   "opened_at": "t62.0",
+   "closed_at": null,
+   "active": true
+  }
+ ],
+ "scope_events": [
+  {
+   "op": "open",
+   "scope": "s1",
+   "loc": "t8.0"
+  },
+  {
+   "op": "close",
+   "scope": "s1",
+   "loc": "t16.0"
+  },
+  {
+   "op": "open",
+   "scope": "s2",
+   "loc": "t16.1"
+  },
+  {
+   "op": "open",
+   "scope": "s3",
+   "loc": "t24.0"
+  },
+  {
+   "op": "close",
+   "scope": "s3",
+   "loc": "t28.1"
+  },
+  {
+   "op": "open",
+   "scope": "s4",
+   "loc": "t28.1"
+  },
+  {
+   "op": "close",
+   "scope": "s4",
+   "loc": "t40.0"
+  },
+  {
+   "op": "open",
+   "scope": "s5",
+   "loc": "t40.0"
+  },
+  {
+   "op": "close",
+   "scope": "s5",
+   "loc": "t56.0"
+  },
+  {
+   "op": "close",
+   "scope": "s2",
+   "loc": "t56.0"
+  },
+  {
+   "op": "open",
+   "scope": "s6",
+   "loc": "t56.0"
+  },
+  {
+   "op": "open",
+   "scope": "s7",
+   "loc": "t62.0"
+  }
+ ],
+ "active_chain": [
+  "s7",
+  "s6",
+  "s0"
+ ],
+ "constants": [
+  {
+   "id": "K0",
+   "symbols": [
+    "everything_run"
+   ],
+   "value": "Everything has to run on the college server, we don't get cloud credits",
+   "kind": "constraint",
+   "scope": "s0",
+   "loc": "t6.0",
+   "restated": 0,
+   "pinned": true
+  },
+  {
+   "id": "K1",
+   "symbols": [
+    "backend"
+   ],
+   "value": "Express",
+   "kind": "choice",
+   "scope": "s2",
+   "loc": "t18.1",
+   "restated": 0,
+   "pinned": false
+  },
+  {
+   "id": "K2",
+   "symbols": [
+    "frontend"
+   ],
+   "value": "React with Vite",
+   "kind": "choice",
+   "scope": "s2",
+   "loc": "t22.0",
+   "restated": 0,
+   "pinned": false
+  },
+  {
+   "id": "K3",
+   "symbols": [
+    "migrations"
+   ],
+   "value": "Knex",
+   "kind": "choice",
+   "scope": "s4",
+   "loc": "t34.0",
+   "restated": 0,
+   "pinned": false
+  },
+  {
+   "id": "K4",
+   "symbols": [
+    "auth"
+   ],
+   "value": "session cookies",
+   "kind": "choice",
+   "scope": "s5",
+   "loc": "t42.0",
+   "restated": 0,
+   "pinned": false
+  },
+  {
+   "id": "K5",
+   "symbols": [
+    "backend_tests"
+   ],
+   "value": "Jest and Supertest",
+   "kind": "choice",
+   "scope": "s6",
+   "loc": "t58.0",
+   "restated": 0,
+   "pinned": false
+  },
+  {
+   "id": "K6",
+   "symbols": [
+    "test_coverage_least"
+   ],
+   "value": "Test coverage must be at least 70% for the backend",
+   "kind": "constraint",
+   "scope": "s6",
+   "loc": "t60.0",
+   "restated": 0,
+   "pinned": false
+  }
+ ],
+ "variables": [
+  {
+   "name": "deadline",
+   "ssa": "deadline.2",
+   "value": "November 22",
+   "kind": "fact",
+   "scope": "s5",
+   "loc": "t52.1",
+   "prior": 1,
+   "pinned": false
+  },
+  {
+   "name": "app_name",
+   "ssa": "app_name.2",
+   "value": "CampusPulse",
+   "kind": "fact",
+   "scope": "s5",
+   "loc": "t46.0",
+   "prior": 1,
+   "pinned": false
+  },
+  {
+   "name": "database",
+   "ssa": "database.2",
+   "value": "PostgreSQL",
+   "kind": "choice",
+   "scope": "s4",
+   "loc": "t32.0",
+   "prior": 1,
+   "pinned": false
+  }
+ ],
+ "symbols": {
+  "deadline": {
+   "kind": "fact",
+   "aliases": [
+    "deadline"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": true,
+   "live_rule": "L-SCOPE",
+   "live_why": "declared/assigned in active scope s0 'conversation'",
+   "versions": [
+    {
+     "n": 1,
+     "value": "November 15",
+     "kind": "fact",
+     "scope": "s0",
+     "loc": "t2.2",
+     "killed_by": "deadline.2"
+    },
+    {
+     "n": 2,
+     "value": "November 22",
+     "kind": "fact",
+     "scope": "s5",
+     "loc": "t52.1",
+     "killed_by": null
+    }
+   ],
+   "uses": [
+    {
+     "loc": "t3.0",
+     "scope": "s0",
+     "how": "name"
+    },
+    {
+     "loc": "t52.0",
+     "scope": "s5",
+     "how": "name"
+    },
+    {
+     "loc": "t53.1",
+     "scope": "s5",
+     "how": "name"
+    }
+   ]
+  },
+  "app_name": {
+   "kind": "fact",
+   "aliases": [
+    "app_name"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": true,
+   "live_rule": "L-SCOPE",
+   "live_why": "declared/assigned in active scope s0 'conversation'",
+   "versions": [
+    {
+     "n": 1,
+     "value": "EventHub",
+     "kind": "fact",
+     "scope": "s0",
+     "loc": "t4.0",
+     "killed_by": "app_name.2"
+    },
+    {
+     "n": 2,
+     "value": "CampusPulse",
+     "kind": "fact",
+     "scope": "s5",
+     "loc": "t46.0",
+     "killed_by": null
+    }
+   ],
+   "uses": [
+    {
+     "loc": "t5.0",
+     "scope": "s0",
+     "how": "value"
+    },
+    {
+     "loc": "t47.0",
+     "scope": "s5",
+     "how": "value"
+    },
+    {
+     "loc": "t47.1",
+     "scope": "s5",
+     "how": "value"
+    },
+    {
+     "loc": "t67.0",
+     "scope": "s7",
+     "how": "value"
+    }
+   ]
+  },
+  "everything_run": {
+   "kind": "constraint",
+   "aliases": [
+    "everything_run"
+   ],
+   "pinned": true,
+   "retracted_at": null,
+   "live": true,
+   "live_rule": "L-PIN",
+   "live_why": "pinned by user",
+   "versions": [
+    {
+     "n": 1,
+     "value": "Everything has to run on the college server, we don't get cloud credits",
+     "kind": "constraint",
+     "scope": "s0",
+     "loc": "t6.0",
+     "killed_by": null
+    }
+   ],
+   "uses": []
+  },
+  "students_need": {
+   "kind": "constraint",
+   "aliases": [
+    "students_need"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": false,
+   "live_rule": null,
+   "live_why": null,
+   "versions": [
+    {
+     "n": 1,
+     "value": "Students should not need an account to browse",
+     "kind": "constraint",
+     "scope": "s1",
+     "loc": "t10.1",
+     "killed_by": null
+    }
+   ],
+   "uses": []
+  },
+  "backend": {
+   "kind": "choice",
+   "aliases": [
+    "backend"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": true,
+   "live_rule": "L-USE",
+   "live_why": "name use at t61.0 in active scope s6 'testing and deployment'",
+   "versions": [
+    {
+     "n": 1,
+     "value": "Express",
+     "kind": "choice",
+     "scope": "s2",
+     "loc": "t18.1",
+     "killed_by": null
+    }
+   ],
+   "uses": [
+    {
+     "loc": "t19.0",
+     "scope": "s2",
+     "how": "value"
+    },
+    {
+     "loc": "t21.0",
+     "scope": "s2",
+     "how": "value"
+    },
+    {
+     "loc": "t23.1",
+     "scope": "s2",
+     "how": "value"
+    },
+    {
+     "loc": "t25.5",
+     "scope": "s3",
+     "how": "value"
+    },
+    {
+     "loc": "t33.1",
+     "scope": "s4",
+     "how": "value"
+    },
+    {
+     "loc": "t43.1",
+     "scope": "s5",
+     "how": "value"
+    },
+    {
+     "loc": "t45.1",
+     "scope": "s5",
+     "how": "value"
+    },
+    {
+     "loc": "t57.1",
+     "scope": "s6",
+     "how": "name"
+    },
+    {
+     "loc": "t57.8",
+     "scope": "s6",
+     "how": "value"
+    },
+    {
+     "loc": "t58.0",
+     "scope": "s6",
+     "how": "name"
+    },
+    {
+     "loc": "t60.0",
+     "scope": "s6",
+     "how": "name"
+    },
+    {
+     "loc": "t61.0",
+     "scope": "s6",
+     "how": "name"
+    }
+   ]
+  },
+  "database": {
+   "kind": "choice",
+   "aliases": [
+    "database"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": true,
+   "live_rule": "L-USE",
+   "live_why": "value use at t67.1 in active scope s7 'PM2 setup on the server'",
+   "versions": [
+    {
+     "n": 1,
+     "value": "MongoDB",
+     "kind": "choice",
+     "scope": "s2",
+     "loc": "t20.0",
+     "killed_by": "database.2"
+    },
+    {
+     "n": 2,
+     "value": "PostgreSQL",
+     "kind": "choice",
+     "scope": "s4",
+     "loc": "t32.0",
+     "killed_by": null
+    }
+   ],
+   "uses": [
+    {
+     "loc": "t21.0",
+     "scope": "s2",
+     "how": "value"
+    },
+    {
+     "loc": "t21.1",
+     "scope": "s2",
+     "how": "value"
+    },
+    {
+     "loc": "t21.2",
+     "scope": "s2",
+     "how": "value"
+    },
+    {
+     "loc": "t31.1",
+     "scope": "s4",
+     "how": "name"
+    },
+    {
+     "loc": "t43.1",
+     "scope": "s5",
+     "how": "name"
+    },
+    {
+     "loc": "t57.1",
+     "scope": "s6",
+     "how": "name"
+    },
+    {
+     "loc": "t57.5",
+     "scope": "s6",
+     "how": "value"
+    },
+    {
+     "loc": "t57.7",
+     "scope": "s6",
+     "how": "name"
+    },
+    {
+     "loc": "t67.1",
+     "scope": "s7",
+     "how": "value"
+    }
+   ]
+  },
+  "frontend": {
+   "kind": "choice",
+   "aliases": [
+    "frontend"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": true,
+   "live_rule": "L-USE",
+   "live_why": "name use at t57.6 in active scope s6 'testing and deployment'",
+   "versions": [
+    {
+     "n": 1,
+     "value": "React with Vite",
+     "kind": "choice",
+     "scope": "s2",
+     "loc": "t22.0",
+     "killed_by": null
+    }
+   ],
+   "uses": [
+    {
+     "loc": "t23.0",
+     "scope": "s2",
+     "how": "value"
+    },
+    {
+     "loc": "t39.0",
+     "scope": "s4",
+     "how": "name"
+    },
+    {
+     "loc": "t41.2",
+     "scope": "s5",
+     "how": "name"
+    },
+    {
+     "loc": "t45.1",
+     "scope": "s5",
+     "how": "name"
+    },
+    {
+     "loc": "t51.1",
+     "scope": "s5",
+     "how": "name"
+    },
+    {
+     "loc": "t57.2",
+     "scope": "s6",
+     "how": "name"
+    },
+    {
+     "loc": "t57.6",
+     "scope": "s6",
+     "how": "name"
+    }
+   ]
+  },
+  "notifications_sent": {
+   "kind": "constraint",
+   "aliases": [
+    "notifications_sent"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": false,
+   "live_rule": null,
+   "live_why": null,
+   "versions": [
+    {
+     "n": 1,
+     "value": "Notifications should be sent within 5 minutes of an event being posted",
+     "kind": "constraint",
+     "scope": "s3",
+     "loc": "t26.0",
+     "killed_by": null
+    }
+   ],
+   "uses": []
+  },
+  "image_event_max": {
+   "kind": "constraint",
+   "aliases": [
+    "image_event_max"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": false,
+   "live_rule": null,
+   "live_why": null,
+   "versions": [
+    {
+     "n": 1,
+     "value": "One image per event, max 2 MB",
+     "kind": "constraint",
+     "scope": "s4",
+     "loc": "t30.0",
+     "killed_by": null
+    }
+   ],
+   "uses": []
+  },
+  "migrations": {
+   "kind": "choice",
+   "aliases": [
+    "migrations"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": true,
+   "live_rule": "L-USE",
+   "live_why": "name use at t67.0 in active scope s7 'PM2 setup on the server'",
+   "versions": [
+    {
+     "n": 1,
+     "value": "Knex",
+     "kind": "choice",
+     "scope": "s4",
+     "loc": "t34.0",
+     "killed_by": null
+    }
+   ],
+   "uses": [
+    {
+     "loc": "t35.0",
+     "scope": "s4",
+     "how": "name"
+    },
+    {
+     "loc": "t57.7",
+     "scope": "s6",
+     "how": "name"
+    },
+    {
+     "loc": "t67.0",
+     "scope": "s7",
+     "how": "name"
+    }
+   ]
+  },
+  "add_dark_mode": {
+   "kind": "decision",
+   "aliases": [
+    "add_dark_mode"
+   ],
+   "pinned": false,
+   "retracted_at": "t54.0",
+   "live": false,
+   "live_rule": null,
+   "live_why": null,
+   "versions": [
+    {
+     "n": 1,
+     "value": "add dark mode then",
+     "kind": "decision",
+     "scope": "s4",
+     "loc": "t38.0",
+     "killed_by": "retract@t54.0"
+    }
+   ],
+   "uses": []
+  },
+  "auth": {
+   "kind": "choice",
+   "aliases": [
+    "auth"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": true,
+   "live_rule": "L-USE",
+   "live_why": "name use at t61.0 in active scope s6 'testing and deployment'",
+   "versions": [
+    {
+     "n": 1,
+     "value": "session cookies",
+     "kind": "choice",
+     "scope": "s5",
+     "loc": "t42.0",
+     "killed_by": null
+    }
+   ],
+   "uses": [
+    {
+     "loc": "t43.0",
+     "scope": "s5",
+     "how": "value"
+    },
+    {
+     "loc": "t61.0",
+     "scope": "s6",
+     "how": "name"
+    }
+   ]
+  },
+  "every_api_response_json": {
+   "kind": "constraint",
+   "aliases": [
+    "every_api_response_json"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": false,
+   "live_rule": null,
+   "live_why": null,
+   "versions": [
+    {
+     "n": 1,
+     "value": "Every API response must be JSON, even errors",
+     "kind": "constraint",
+     "scope": "s5",
+     "loc": "t44.0",
+     "killed_by": null
+    }
+   ],
+   "uses": []
+  },
+  "api_design_choice": {
+   "kind": "choice",
+   "aliases": [
+    "api_design_choice"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": false,
+   "live_rule": null,
+   "live_why": null,
+   "versions": [
+    {
+     "n": 1,
+     "value": "offset pagination with 20 events per page",
+     "kind": "choice",
+     "scope": "s5",
+     "loc": "t50.0",
+     "killed_by": null
+    }
+   ],
+   "uses": []
+  },
+  "backend_tests": {
+   "kind": "choice",
+   "aliases": [
+    "backend_tests"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": true,
+   "live_rule": "L-SCOPE",
+   "live_why": "declared/assigned in active scope s6 'testing and deployment'",
+   "versions": [
+    {
+     "n": 1,
+     "value": "Jest and Supertest",
+     "kind": "choice",
+     "scope": "s6",
+     "loc": "t58.0",
+     "killed_by": null
+    }
+   ],
+   "uses": []
+  },
+  "test_coverage_least": {
+   "kind": "constraint",
+   "aliases": [
+    "test_coverage_least"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": true,
+   "live_rule": "L-SCOPE",
+   "live_why": "declared/assigned in active scope s6 'testing and deployment'",
+   "versions": [
+    {
+     "n": 1,
+     "value": "Test coverage must be at least 70% for the backend",
+     "kind": "constraint",
+     "scope": "s6",
+     "loc": "t60.0",
+     "killed_by": null
+    }
+   ],
+   "uses": []
+  }
+ },
+ "audit": {
+  "dropped": [
+   {
+    "symbol": "deadline",
+    "ssa": "deadline.1",
+    "value": "November 15",
+    "kind": "fact",
+    "scope": "s0",
+    "loc": "t2.2",
+    "rule": "R-SSA",
+    "justification": "dead store: superseded by deadline.2"
+   },
+   {
+    "symbol": "app_name",
+    "ssa": "app_name.1",
+    "value": "EventHub",
+    "kind": "fact",
+    "scope": "s0",
+    "loc": "t4.0",
+    "rule": "R-SSA",
+    "justification": "dead store: superseded by app_name.2"
+   },
+   {
+    "symbol": "students_need",
+    "ssa": "students_need.1",
+    "value": "Students should not need an account to browse",
+    "kind": "constraint",
+    "scope": "s1",
+    "loc": "t10.1",
+    "rule": "R-SCOPE",
+    "justification": "declared in s1 'requirements', closed at t16.0; never used afterwards; active chain = [s7, s6, s0]"
+   },
+   {
+    "symbol": "database",
+    "ssa": "database.1",
+    "value": "MongoDB",
+    "kind": "choice",
+    "scope": "s2",
+    "loc": "t20.0",
+    "rule": "R-SSA",
+    "justification": "dead store: superseded by database.2"
+   },
+   {
+    "symbol": "notifications_sent",
+    "ssa": "notifications_sent.1",
+    "value": "Notifications should be sent within 5 minutes of an event being posted",
+    "kind": "constraint",
+    "scope": "s3",
+    "loc": "t26.0",
+    "rule": "R-SCOPE",
+    "justification": "declared in s3 'hosting the mobile push notifications part', closed at t28.1; never used afterwards; active chain = [s7, s6, s0]"
+   },
+   {
+    "symbol": "image_event_max",
+    "ssa": "image_event_max.1",
+    "value": "One image per event, max 2 MB",
+    "kind": "constraint",
+    "scope": "s4",
+    "loc": "t30.0",
+    "rule": "R-SCOPE",
+    "justification": "declared in s4 'data model', closed at t40.0; never used afterwards; active chain = [s7, s6, s0]"
+   },
+   {
+    "symbol": "add_dark_mode",
+    "ssa": "add_dark_mode.1",
+    "value": "add dark mode then",
+    "kind": "decision",
+    "scope": "s4",
+    "loc": "t38.0",
+    "rule": "R-KILL",
+    "justification": "explicitly retracted at t54.0"
+   },
+   {
+    "symbol": "every_api_response_json",
+    "ssa": "every_api_response_json.1",
+    "value": "Every API response must be JSON, even errors",
+    "kind": "constraint",
+    "scope": "s5",
+    "loc": "t44.0",
+    "rule": "R-SCOPE",
+    "justification": "declared in s5 'API design', closed at t56.0; never used afterwards; active chain = [s7, s6, s0]"
+   },
+   {
+    "symbol": "api_design_choice",
+    "ssa": "api_design_choice.1",
+    "value": "offset pagination with 20 events per page",
+    "kind": "choice",
+    "scope": "s5",
+    "loc": "t50.0",
+    "rule": "R-SCOPE",
+    "justification": "declared in s5 'API design', closed at t56.0; never used afterwards; active chain = [s7, s6, s0]"
+   }
+  ],
+  "drop_counts": {
+   "R-SSA": 3,
+   "R-SCOPE": 5,
+   "R-KILL": 1
+  },
+  "discarded": [
+   {
+    "loc": "t0.0",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t0.1",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t0.2",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t1.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t1.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t1.2",
+    "rule": "E-QUESTION",
+    "role": "assistant"
+   },
+   {
+    "loc": "t1.3",
+    "rule": "E-QUESTION",
+    "role": "assistant"
+   },
+   {
+    "loc": "t1.4",
+    "rule": "E-QUESTION",
+    "role": "assistant"
+   },
+   {
+    "loc": "t1.5",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t2.0",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t2.1",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t3.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t3.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t3.2",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t5.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t5.1",
+    "rule": "E-EXPLORATORY",
+    "role": "assistant"
+   },
+   {
+    "loc": "t5.2",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t7.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t7.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t7.2",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t9.0",
+    "rule": "E-ACK",
+    "role": "assistant"
+   },
+   {
+    "loc": "t9.1",
+    "rule": "E-PROPOSAL",
+    "role": "assistant"
+   },
+   {
+    "loc": "t9.2",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t9.3",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t9.4",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t9.5",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t9.6",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t9.7",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t9.8",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t9.9",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t9.10",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t9.11",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t9.12",
+    "rule": "E-QUESTION",
+    "role": "assistant"
+   },
+   {
+    "loc": "t10.0",
+    "rule": "E-ACK",
+    "role": "user"
+   },
+   {
+    "loc": "t11.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t11.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t11.2",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t12.0",
+    "rule": "E-QUESTION",
+    "role": "user"
+   },
+   {
+    "loc": "t13.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t13.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t14.0",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t14.1",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t15.0",
+    "rule": "E-ACK",
+    "role": "assistant"
+   },
+   {
+    "loc": "t15.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t15.2",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t17.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t17.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t17.2",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t17.3",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t17.4",
+    "rule": "E-QUESTION",
+    "role": "assistant"
+   },
+   {
+    "loc": "t18.0",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t19.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t21.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t21.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t21.2",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t23.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t23.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t25.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t25.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t25.2",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t25.3",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t25.4",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t25.5",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t25.6",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t25.7",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t27.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t27.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t28.0",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t29.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t29.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t29.2",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t29.3",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t29.4",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t29.5",
+    "rule": "E-QUESTION",
+    "role": "assistant"
+   },
+   {
+    "loc": "t31.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t31.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t31.2",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t32.1",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t33.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t33.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t33.2",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t33.3",
+    "rule": "E-CODE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t35.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t35.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t36.0",
+    "rule": "E-EXPLORATORY",
+    "role": "user"
+   },
+   {
+    "loc": "t37.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t37.1",
+    "rule": "E-EXPLORATORY",
+    "role": "assistant"
+   },
+   {
+    "loc": "t39.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t41.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t41.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t41.2",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t43.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t43.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t45.0",
+    "rule": "E-ACK",
+    "role": "assistant"
+   },
+   {
+    "loc": "t45.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t46.1",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t47.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t47.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t48.0",
+    "rule": "E-QUESTION",
+    "role": "user"
+   },
+   {
+    "loc": "t49.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t49.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t51.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t51.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t52.0",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t53.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t53.1",
+    "rule": "E-EXPLORATORY",
+    "role": "assistant"
+   },
+   {
+    "loc": "t55.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t55.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t57.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t57.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t57.2",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t57.3",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t57.4",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t57.5",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t57.6",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t57.7",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t57.8",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t57.9",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t59.0",
+    "rule": "E-ACK",
+    "role": "assistant"
+   },
+   {
+    "loc": "t59.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t61.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t61.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t63.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t63.1",
+    "rule": "E-CODE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t63.2",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t64.0",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t65.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t65.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t66.0",
+    "rule": "E-QUESTION",
+    "role": "user"
+   },
+   {
+    "loc": "t67.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t67.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t68.0",
+    "rule": "E-ACK",
+    "role": "user"
+   },
+   {
+    "loc": "t68.1",
+    "rule": "E-QUESTION",
+    "role": "user"
+   }
+  ],
+  "discard_counts": {
+   "E-FILLER": 13,
+   "E-NARRATIVE": 97,
+   "E-QUESTION": 10,
+   "E-EXPLORATORY": 4,
+   "E-ACK": 6,
+   "E-PROPOSAL": 1,
+   "E-CODE": 2
+  },
+  "events": [
+   {
+    "loc": "t2.2",
+    "op": "define",
+    "ssa": "deadline.1",
+    "rule": "P-COPULA"
+   },
+   {
+    "loc": "t4.0",
+    "op": "define",
+    "ssa": "app_name.1",
+    "rule": "P-COPULA-STRONG"
+   },
+   {
+    "loc": "t6.0",
+    "op": "define",
+    "ssa": "everything_run.1",
+    "rule": "P-PIN+P-CONSTRAINT"
+   },
+   {
+    "loc": "t8.0",
+    "op": "scope",
+    "ssa": "s1",
+    "rule": "S-DIRECTIVE"
+   },
+   {
+    "loc": "t10.1",
+    "op": "define",
+    "ssa": "students_need.1",
+    "rule": "P-CONSTRAINT"
+   },
+   {
+    "loc": "t16.0",
+    "op": "scope",
+    "ssa": "s0",
+    "rule": "S-DIRECTIVE"
+   },
+   {
+    "loc": "t16.1",
+    "op": "scope",
+    "ssa": "s2",
+    "rule": "S-DIRECTIVE"
+   },
+   {
+    "loc": "t18.1",
+    "op": "define",
+    "ssa": "backend.1",
+    "rule": "P-CHOICE"
+   },
+   {
+    "loc": "t20.0",
+    "op": "define",
+    "ssa": "database.1",
+    "rule": "P-CHOICE"
+   },
+   {
+    "loc": "t22.0",
+    "op": "define",
+    "ssa": "frontend.1",
+    "rule": "P-CHOICE"
+   },
+   {
+    "loc": "t24.0",
+    "op": "scope",
+    "ssa": "s3",
+    "rule": "S-DIRECTIVE"
+   },
+   {
+    "loc": "t26.0",
+    "op": "define",
+    "ssa": "notifications_sent.1",
+    "rule": "P-CONSTRAINT"
+   },
+   {
+    "loc": "t28.1",
+    "op": "scope",
+    "ssa": "s4",
+    "rule": "S-DIRECTIVE"
+   },
+   {
+    "loc": "t30.0",
+    "op": "define",
+    "ssa": "image_event_max.1",
+    "rule": "P-CONSTRAINT-KW"
+   },
+   {
+    "loc": "t32.0",
+    "op": "revise",
+    "ssa": "database.2",
+    "rule": "P-SWITCH"
+   },
+   {
+    "loc": "t34.0",
+    "op": "define",
+    "ssa": "migrations.1",
+    "rule": "P-CHOICE"
+   },
+   {
+    "loc": "t38.0",
+    "op": "define",
+    "ssa": "add_dark_mode.1",
+    "rule": "P-DECIDE"
+   },
+   {
+    "loc": "t40.0",
+    "op": "scope",
+    "ssa": "s5",
+    "rule": "S-DIRECTIVE"
+   },
+   {
+    "loc": "t42.0",
+    "op": "define",
+    "ssa": "auth.1",
+    "rule": "P-CHOICE"
+   },
+   {
+    "loc": "t44.0",
+    "op": "define",
+    "ssa": "every_api_response_json.1",
+    "rule": "P-CONSTRAINT"
+   },
+   {
+    "loc": "t46.0",
+    "op": "revise",
+    "ssa": "app_name.2",
+    "rule": "P-ASSIGN"
+   },
+   {
+    "loc": "t50.0",
+    "op": "define",
+    "ssa": "api_design_choice.1",
+    "rule": "P-CHOICE"
+   },
+   {
+    "loc": "t52.1",
+    "op": "revise",
+    "ssa": "deadline.2",
+    "rule": "P-COPULA-STRONG"
+   },
+   {
+    "loc": "t54.0",
+    "op": "retract",
+    "ssa": "add_dark_mode.1",
+    "rule": "P-RETRACT"
+   },
+   {
+    "loc": "t56.0",
+    "op": "scope",
+    "ssa": "s6",
+    "rule": "S-DIRECTIVE"
+   },
+   {
+    "loc": "t58.0",
+    "op": "define",
+    "ssa": "backend_tests.1",
+    "rule": "P-CHOICE"
+   },
+   {
+    "loc": "t60.0",
+    "op": "define",
+    "ssa": "test_coverage_least.1",
+    "rule": "P-CONSTRAINT"
+   },
+   {
+    "loc": "t62.0",
+    "op": "scope",
+    "ssa": "s7",
+    "rule": "S-DIRECTIVE"
+   }
+  ]
+ },
+ "store": {
+  "t0.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Hi!"
+  },
+  "t0.1": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "I'm starting a semester project for my web technologies course and I want your help planning it end to end."
+  },
+  "t0.2": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "The idea is a web app where students can find events happening on campus."
+  },
+  "t1.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "That sounds like a great project — it's scoped well for a semester and has a clear user."
+  },
+  "t1.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Before we dive in, it would help to know a few things:"
+  },
+  "t1.2": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "Who are the primary users — just students, or also club organisers who post events?"
+  },
+  "t1.3": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "What's your timeline and team size?"
+  },
+  "t1.4": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "Are there any constraints from the course (required stack, hosting, etc.)?"
+  },
+  "t1.5": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Once I know those, we can break the work into phases: requirements, tech stack, data model, frontend, and deployment."
+  },
+  "t2.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Students browse, club organisers post."
+  },
+  "t2.1": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "It's me and one teammate, Dhanjith."
+  },
+  "t2.2": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "The deadline is November 15."
+  },
+  "t3.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Got it — two people, two user roles, and a November 15 deadline."
+  },
+  "t3.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "That's roughly five weeks, so we should keep the feature set tight."
+  },
+  "t3.2": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "A typical split would be one person on the backend and data model and the other on the frontend, meeting in the middle at the API."
+  },
+  "t4.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "The app name will be EventHub."
+  },
+  "t5.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "EventHub is clear and easy to remember."
+  },
+  "t5.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "One thing to be aware of: there are a few existing products with that name, so if you ever deploy it publicly you might want something more distinctive."
+  },
+  "t5.2": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "For a course project it's perfectly fine."
+  },
+  "t6.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Important: everything has to run on the college server, we don't get cloud credits."
+  },
+  "t7.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Understood."
+  },
+  "t7.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "That's an important constraint — it rules out managed services like Firebase or a hosted database, and it means we should pick a stack that's easy to install on a plain Linux machine."
+  },
+  "t7.2": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "I'll keep that in mind for every recommendation."
+  },
+  "t8.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Let's start with the requirements."
+  },
+  "t9.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Great."
+  },
+  "t9.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "For an MVP of a campus events app, I'd suggest these core requirements:"
+  },
+  "t9.2": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "**Students**"
+  },
+  "t9.3": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "Browse upcoming events in a list, sorted by date"
+  },
+  "t9.4": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "Filter events by category (tech, cultural, sports, academic)"
+  },
+  "t9.5": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "View an event's details: title, time, venue, organiser, description"
+  },
+  "t9.6": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "**Organisers**"
+  },
+  "t9.7": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "Log in"
+  },
+  "t9.8": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "Create, edit, and delete their own events"
+  },
+  "t9.9": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "**Non-functional**"
+  },
+  "t9.10": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "Works on mobile browsers"
+  },
+  "t9.11": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "Page loads under two seconds on campus Wi-Fi"
+  },
+  "t9.12": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Does that match what you had in mind, or is there anything you'd add or cut?"
+  },
+  "t10.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Looks good."
+  },
+  "t10.1": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Students should not need an account to browse."
+  },
+  "t11.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "That's a good call — it lowers friction a lot."
+  },
+  "t11.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "So authentication only applies to organisers."
+  },
+  "t11.2": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "That simplifies the auth model: one role that logs in, and anonymous read access for everyone else."
+  },
+  "t12.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Maybe we could also add an RSVP feature?"
+  },
+  "t13.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "RSVP is a nice touch, but it would require student accounts, which conflicts with the decision you just made about anonymous browsing."
+  },
+  "t13.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "You could do an anonymous \"interested\" counter instead, but I'd treat it as a stretch goal rather than part of the MVP given the five-week timeline."
+  },
+  "t14.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Yeah, skip RSVP for now."
+  },
+  "t14.1": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Let's also support event categories: tech, cultural, sports, academic."
+  },
+  "t15.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Sounds good."
+  },
+  "t15.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Categories will be a fixed list for now; we can store them as an enum or a small lookup table."
+  },
+  "t15.2": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "I'll make sure the data model reflects that."
+  },
+  "t16.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Done with requirements."
+  },
+  "t16.1": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Now let's work on the tech stack."
+  },
+  "t17.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "For the stack, given that you're deploying on a college Linux server with no cloud services, here's what I'd consider:"
+  },
+  "t17.1": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "**Backend:** Node.js with Express, or Python with Flask/FastAPI"
+  },
+  "t17.2": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "**Database:** PostgreSQL, MySQL, SQLite, or MongoDB"
+  },
+  "t17.3": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "**Frontend:** React, Vue, or plain server-rendered templates"
+  },
+  "t17.4": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "What languages are you and Dhanjith most comfortable with?"
+  },
+  "t18.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "We both know JavaScript well."
+  },
+  "t18.1": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "We'll use Express for the backend."
+  },
+  "t19.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Express is a solid choice for a team that knows JavaScript — it's minimal, well documented, and easy to run under something like PM2 on the college server."
+  },
+  "t20.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "And let's use MongoDB for the database since it's JSON-like and we've used it before."
+  },
+  "t21.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "MongoDB will feel natural with Express, especially with Mongoose for schemas."
+  },
+  "t21.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "One thing to consider: your data is fairly relational — events belong to organisers, and you'll filter by category and date — but MongoDB can handle that fine at this scale."
+  },
+  "t21.2": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "You'll need to install MongoDB Community on the server, which is straightforward."
+  },
+  "t22.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "For the frontend we'll use React with Vite."
+  },
+  "t23.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "React with Vite gives you fast builds and a smooth dev experience."
+  },
+  "t23.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Since you'll be deploying the built static files, you can have Express serve the `dist` folder directly, so there's only one process to run on the server."
+  },
+  "t24.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Within this, let's first look at hosting the mobile push notifications part — I want students to get notified about new events."
+  },
+  "t25.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Push notifications on the web are possible through the Push API and service workers."
+  },
+  "t25.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "You'd need:"
+  },
+  "t25.2": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "A service worker registered in the React app"
+  },
+  "t25.3": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "A VAPID key pair generated on the server"
+  },
+  "t25.4": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "A subscription endpoint stored per browser"
+  },
+  "t25.5": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "A library like `web-push` on the Express side to send messages"
+  },
+  "t25.6": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "There are some caveats: iOS Safari only supports web push for installed PWAs, and since you decided students don't have accounts, you'd be storing anonymous subscriptions."
+  },
+  "t25.7": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "It's doable but it's a meaningful chunk of work."
+  },
+  "t26.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Notifications should be sent within 5 minutes of an event being posted."
+  },
+  "t27.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "That's achievable — you'd trigger the push send right after the event is saved, so latency would be seconds rather than minutes."
+  },
+  "t27.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "The main cost is the setup work, not the delivery speed."
+  },
+  "t28.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Hmm, this is getting complicated."
+  },
+  "t28.1": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Let's move on to the data model, we can come back to notifications later if there's time."
+  },
+  "t29.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Makes sense — notifications are a good stretch goal."
+  },
+  "t29.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "For the data model, the core entities are:"
+  },
+  "t29.2": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "**Organiser**: id, name, email, password hash, club name"
+  },
+  "t29.3": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "**Event**: id, title, description, category, start time, end time, venue, organiser id, created at"
+  },
+  "t29.4": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Categories can be a fixed set of values on the Event."
+  },
+  "t29.5": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Do you want events to support images?"
+  },
+  "t30.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Yes, one image per event, max 2 MB."
+  },
+  "t31.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "One image per event with a 2 MB cap is reasonable."
+  },
+  "t31.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "You can store the files on the server's disk under an `uploads/` directory and keep just the file path in the database."
+  },
+  "t31.2": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "I'd validate the size and MIME type on the server, not only in the browser."
+  },
+  "t32.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Actually, let's switch from MongoDB to PostgreSQL."
+  },
+  "t32.1": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Our data really is relational and the college server already has Postgres installed."
+  },
+  "t33.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "That's a good reason to switch — having it pre-installed removes a setup step, and foreign keys between events and organisers will keep the data consistent."
+  },
+  "t33.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "With Express, you can use `pg` directly or a query builder like Knex."
+  },
+  "t33.2": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Here's a first pass at the schema:"
+  },
+  "t33.3": {
+   "role": "assistant",
+   "kind": "CODE",
+   "text": "```sql\nCREATE TABLE organisers (\n  id SERIAL PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT UNIQUE NOT NULL,\n  password_hash TEXT NOT NULL,\n  club_name TEXT NOT NULL\n);\n\nCREATE TABLE events (\n  id SERIAL PRIMARY KEY,\n  title TEXT NOT NULL,\n  description TEXT,\n  category TEXT NOT NULL CHECK (category IN ('tech','cultural','sports','academic')),\n  starts_at TIMESTAMPTZ NOT NULL,\n  ends_at TIMESTAMPTZ,\n  venue TEXT NOT NULL,\n  image_path TEXT,\n  organiser_id INTEGER REFERENCES organisers(id) ON DELETE CASCADE,\n  created_at TIMESTAMPTZ DEFAULT now()\n);\n```"
+  },
+  "t34.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "We'll use Knex for migrations."
+  },
+  "t35.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Knex is a good fit — migrations give you a reproducible schema on the college server, and you can seed some sample events for your demo."
+  },
+  "t35.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "I'd also add an index on `events(starts_at)` since the main page sorts by date."
+  },
+  "t36.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Also, I was thinking about adding a dark mode toggle to the UI."
+  },
+  "t37.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Dark mode is fairly cheap with CSS variables and a `prefers-color-scheme` media query, plus a toggle that stores the preference in localStorage."
+  },
+  "t37.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "It's maybe half a day of work."
+  },
+  "t38.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Ok we decided to add dark mode then."
+  },
+  "t39.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Sounds good, I'll include dark mode in the frontend plan."
+  },
+  "t40.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Next, let's work on the API design."
+  },
+  "t41.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Here's a REST API that covers the MVP:"
+  },
+  "t41.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "| Method | Path | Auth | Purpose | |---|---|---|---| | GET | /api/events | none | List upcoming events, supports `?category=` | | GET | /api/events/:id | none | Event details | | POST | /api/events | organiser | Create event | | PUT | /api/events/:id | organiser (owner) | Edit event | | DELETE | /api/events/:id | organiser (owner) | Delete event | | POST | /api/auth/login | none | Organiser login |"
+  },
+  "t41.2": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "For auth, I'd use sessions with an httpOnly cookie rather than JWTs, since the frontend and API are served from the same origin."
+  },
+  "t42.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Let's go with session cookies for auth."
+  },
+  "t43.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Session cookies it is."
+  },
+  "t43.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "You can use `express-session` with `connect-pg-simple` to store sessions in Postgres, which keeps everything in one database on the server."
+  },
+  "t44.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Every API response must be JSON, even errors."
+  },
+  "t45.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Good rule."
+  },
+  "t45.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "I'd add a final error-handling middleware in Express that catches everything and returns `{ \"error\": { \"message\": ..., \"code\": ... } }` with the right status code, so the frontend never has to parse HTML error pages."
+  },
+  "t46.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Change the app name to CampusPulse."
+  },
+  "t46.1": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "EventHub is taken by like five other apps."
+  },
+  "t47.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "CampusPulse is more distinctive and still descriptive — good change."
+  },
+  "t47.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "I'll refer to it as CampusPulse from now on."
+  },
+  "t48.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "How should we handle pagination for the events list?"
+  },
+  "t49.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Since events are sorted by start time and the list is mostly \"upcoming\", cursor-based pagination on `(starts_at, id)` works well and avoids skipped items when new events are posted."
+  },
+  "t49.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "For a course project, though, simple `?page=` and `?limit=` offset pagination is perfectly acceptable and easier to demo."
+  },
+  "t50.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Let's use offset pagination with 20 events per page."
+  },
+  "t51.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Offset pagination with a page size of 20 — simple and predictable."
+  },
+  "t51.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "I'll make sure the API returns `page`, `limit`, and `total` alongside the events so the frontend can render page controls."
+  },
+  "t52.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Bad news, our professor moved the deadline."
+  },
+  "t52.1": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "The deadline is now November 22."
+  },
+  "t53.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "An extra week helps a lot."
+  },
+  "t53.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "With November 22 as the new deadline, you might even have time for one stretch goal at the end."
+  },
+  "t54.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Forget about dark mode, we'd rather spend the extra time on testing."
+  },
+  "t55.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Reasonable trade-off — tests will matter more for your grade than a theme toggle."
+  },
+  "t55.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "I'll drop dark mode from the plan."
+  },
+  "t56.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Moving on to testing and deployment."
+  },
+  "t57.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "For testing, I'd suggest:"
+  },
+  "t57.1": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "**Backend:** Jest + Supertest for API endpoint tests, run against a separate test database"
+  },
+  "t57.2": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "**Frontend:** Vitest + React Testing Library for key components (event list, filter, event form)"
+  },
+  "t57.3": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "**Manual:** a short checklist for the demo flow"
+  },
+  "t57.4": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "For deployment on the college server:"
+  },
+  "t57.5": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "Install Node 20 and make sure PostgreSQL is running"
+  },
+  "t57.6": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "`npm ci && npm run build` for the frontend"
+  },
+  "t57.7": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "Run Knex migrations against the production database"
+  },
+  "t57.8": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "Run the Express app under PM2 so it restarts on crashes"
+  },
+  "t57.9": {
+   "role": "assistant",
+   "kind": "ITEM",
+   "text": "Put Nginx in front if the server already uses it"
+  },
+  "t58.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "We'll use Jest and Supertest for backend tests."
+  },
+  "t59.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Great."
+  },
+  "t59.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "I'd aim for tests on every route, including the permission checks — for example, that an organiser can't edit someone else's event."
+  },
+  "t60.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Test coverage must be at least 70% for the backend."
+  },
+  "t61.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "70% backend coverage is a realistic target if you test every route plus the auth middleware."
+  },
+  "t61.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "You can enforce it with Jest's `coverageThreshold` option so the test run fails below 70%."
+  },
+  "t62.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Within this, let's first sort out the PM2 setup on the server."
+  },
+  "t63.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "For PM2, create an `ecosystem.config.js` in the repo:"
+  },
+  "t63.1": {
+   "role": "assistant",
+   "kind": "CODE",
+   "text": "```js\nmodule.exports = {\n  apps: [{\n    name: \"campuspulse\",\n    script: \"server/index.js\",\n    env: { NODE_ENV: \"production\", PORT: 3000 }\n  }]\n};\n```"
+  },
+  "t63.2": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Then on the server run `pm2 start ecosystem.config.js` and `pm2 save`, and `pm2 startup` so it survives reboots."
+  },
+  "t64.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "The app will run on port 3000."
+  },
+  "t65.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Port 3000 it is."
+  },
+  "t65.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "If the college server already has Nginx, you'd proxy port 80 to 3000; otherwise you can ask the admin to open 3000 directly."
+  },
+  "t66.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "What should go in our README for the submission?"
+  },
+  "t67.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "For the submission README I'd include: a short description of CampusPulse, the tech stack, setup instructions for a fresh machine, how to run migrations and seed data, how to run tests, the API table, and a screenshot or two."
+  },
+  "t67.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Mentioning the design decisions — like anonymous browsing and why you switched to PostgreSQL — will also help the grader."
+  },
+  "t68.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "Ok."
+  },
+  "t68.1": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "What's left for us to do this week for the PM2 piece?"
+  }
+ }
+}

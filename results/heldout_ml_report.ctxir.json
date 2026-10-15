@@ -1,0 +1,1013 @@
+{
+ "format": "ctxir/1",
+ "meta": {
+  "source": "samples/heldout_ml_report_chat.txt",
+  "sha256": "708c9cf47a02cc26",
+  "turns": 39,
+  "lexemes": 66,
+  "tokenizer": "approx (word-piece heuristic)",
+  "restatements_folded": 0
+ },
+ "scopes": [
+  {
+   "id": "s0",
+   "name": "conversation",
+   "parent": null,
+   "depth": 0,
+   "opened_at": "t0.0",
+   "closed_at": null,
+   "active": true
+  },
+  {
+   "id": "s1",
+   "name": "methodology section",
+   "parent": "s0",
+   "depth": 1,
+   "opened_at": "t6.0",
+   "closed_at": "t32.0",
+   "active": false
+  },
+  {
+   "id": "s2",
+   "name": "related work section",
+   "parent": "s0",
+   "depth": 1,
+   "opened_at": "t32.0",
+   "closed_at": null,
+   "active": true
+  }
+ ],
+ "scope_events": [
+  {
+   "op": "open",
+   "scope": "s1",
+   "loc": "t6.0"
+  },
+  {
+   "op": "close",
+   "scope": "s1",
+   "loc": "t32.0"
+  },
+  {
+   "op": "open",
+   "scope": "s2",
+   "loc": "t32.0"
+  }
+ ],
+ "active_chain": [
+  "s2",
+  "s0"
+ ],
+ "constants": [
+  {
+   "id": "K0",
+   "symbols": [
+    "report_ieee"
+   ],
+   "value": "Report has to be in IEEE conference format",
+   "kind": "constraint",
+   "scope": "s0",
+   "loc": "t2.1",
+   "restated": 0,
+   "pinned": false
+  },
+  {
+   "id": "K1",
+   "symbols": [
+    "pages_max_including"
+   ],
+   "value": "6 pages max including references",
+   "kind": "constraint",
+   "scope": "s0",
+   "loc": "t4.0",
+   "restated": 0,
+   "pinned": false
+  },
+  {
+   "id": "K2",
+   "symbols": [
+    "least_15_references"
+   ],
+   "value": "We need at least 15 references",
+   "kind": "constraint",
+   "scope": "s2",
+   "loc": "t34.0",
+   "restated": 0,
+   "pinned": false
+  },
+  {
+   "id": "K3",
+   "symbols": [
+    "related_work_section_choice"
+   ],
+   "value": "Zotero to manage the references",
+   "kind": "choice",
+   "scope": "s2",
+   "loc": "t36.0",
+   "restated": 0,
+   "pinned": false
+  }
+ ],
+ "variables": [],
+ "symbols": {
+  "report_ieee": {
+   "kind": "constraint",
+   "aliases": [
+    "report_ieee"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": true,
+   "live_rule": "L-SCOPE",
+   "live_why": "declared/assigned in active scope s0 'conversation'",
+   "versions": [
+    {
+     "n": 1,
+     "value": "Report has to be in IEEE conference format",
+     "kind": "constraint",
+     "scope": "s0",
+     "loc": "t2.1",
+     "killed_by": null
+    }
+   ],
+   "uses": []
+  },
+  "pages_max_including": {
+   "kind": "constraint",
+   "aliases": [
+    "pages_max_including"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": true,
+   "live_rule": "L-SCOPE",
+   "live_why": "declared/assigned in active scope s0 'conversation'",
+   "versions": [
+    {
+     "n": 1,
+     "value": "6 pages max including references",
+     "kind": "constraint",
+     "scope": "s0",
+     "loc": "t4.0",
+     "killed_by": null
+    }
+   ],
+   "uses": []
+  },
+  "evaluation_metric": {
+   "kind": "fact",
+   "aliases": [
+    "evaluation_metric"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": false,
+   "live_rule": null,
+   "live_why": null,
+   "versions": [
+    {
+     "n": 1,
+     "value": "RMSE",
+     "kind": "fact",
+     "scope": "s1",
+     "loc": "t10.0",
+     "killed_by": null
+    }
+   ],
+   "uses": [
+    {
+     "loc": "t11.0",
+     "scope": "s1",
+     "how": "value"
+    },
+    {
+     "loc": "t13.0",
+     "scope": "s1",
+     "how": "value"
+    },
+    {
+     "loc": "t23.1",
+     "scope": "s1",
+     "how": "value"
+    },
+    {
+     "loc": "t24.0",
+     "scope": "s1",
+     "how": "value"
+    },
+    {
+     "loc": "t25.1",
+     "scope": "s1",
+     "how": "value"
+    },
+    {
+     "loc": "t28.0",
+     "scope": "s1",
+     "how": "value"
+    }
+   ]
+  },
+  "train_test_split": {
+   "kind": "choice",
+   "aliases": [
+    "split",
+    "train_test_split"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": false,
+   "live_rule": null,
+   "live_why": null,
+   "versions": [
+    {
+     "n": 1,
+     "value": "an 80/20 random split",
+     "kind": "choice",
+     "scope": "s1",
+     "loc": "t14.0",
+     "killed_by": "train_test_split.2"
+    },
+    {
+     "n": 2,
+     "value": "a temporal split, train on 1990-2015 and test on 2016-2020",
+     "kind": "fact",
+     "scope": "s1",
+     "loc": "t16.1",
+     "killed_by": null
+    }
+   ],
+   "uses": [
+    {
+     "loc": "t15.0",
+     "scope": "s1",
+     "how": "value"
+    }
+   ]
+  },
+  "least_15_references": {
+   "kind": "constraint",
+   "aliases": [
+    "least_15_references"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": true,
+   "live_rule": "L-SCOPE",
+   "live_why": "declared/assigned in active scope s2 'related work section'",
+   "versions": [
+    {
+     "n": 1,
+     "value": "We need at least 15 references",
+     "kind": "constraint",
+     "scope": "s2",
+     "loc": "t34.0",
+     "killed_by": null
+    }
+   ],
+   "uses": []
+  },
+  "related_work_section_choice": {
+   "kind": "choice",
+   "aliases": [
+    "related_work_section_choice"
+   ],
+   "pinned": false,
+   "retracted_at": null,
+   "live": true,
+   "live_rule": "L-SCOPE",
+   "live_why": "declared/assigned in active scope s2 'related work section'",
+   "versions": [
+    {
+     "n": 1,
+     "value": "Zotero to manage the references",
+     "kind": "choice",
+     "scope": "s2",
+     "loc": "t36.0",
+     "killed_by": null
+    }
+   ],
+   "uses": []
+  }
+ },
+ "audit": {
+  "dropped": [
+   {
+    "symbol": "evaluation_metric",
+    "ssa": "evaluation_metric.1",
+    "value": "RMSE",
+    "kind": "fact",
+    "scope": "s1",
+    "loc": "t10.0",
+    "rule": "R-SCOPE",
+    "justification": "declared in s1 'methodology section', closed at t32.0; last use at t28.0 in inactive s1 'methodology section'; active chain = [s2, s0]"
+   },
+   {
+    "symbol": "train_test_split",
+    "ssa": "train_test_split.1",
+    "value": "an 80/20 random split",
+    "kind": "choice",
+    "scope": "s1",
+    "loc": "t14.0",
+    "rule": "R-SSA",
+    "justification": "dead store: superseded by train_test_split.2"
+   },
+   {
+    "symbol": "train_test_split",
+    "ssa": "train_test_split.2",
+    "value": "a temporal split, train on 1990-2015 and test on 2016-2020",
+    "kind": "fact",
+    "scope": "s1",
+    "loc": "t16.1",
+    "rule": "R-SCOPE",
+    "justification": "declared in s1 'methodology section', closed at t32.0; never used afterwards; active chain = [s2, s0]"
+   }
+  ],
+  "drop_counts": {
+   "R-SCOPE": 2,
+   "R-SSA": 1
+  },
+  "discarded": [
+   {
+    "loc": "t0.0",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t0.1",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t1.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t1.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t1.2",
+    "rule": "E-QUESTION",
+    "role": "assistant"
+   },
+   {
+    "loc": "t1.3",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t2.0",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t3.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t3.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t3.2",
+    "rule": "E-QUESTION",
+    "role": "assistant"
+   },
+   {
+    "loc": "t4.1",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t5.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t5.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t7.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t7.1",
+    "rule": "E-QUESTION",
+    "role": "assistant"
+   },
+   {
+    "loc": "t8.0",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t8.1",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t9.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t9.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t11.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t11.1",
+    "rule": "E-EXPLORATORY",
+    "role": "assistant"
+   },
+   {
+    "loc": "t12.0",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t13.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t13.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t15.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t15.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t16.0",
+    "rule": "E-ACK",
+    "role": "user"
+   },
+   {
+    "loc": "t17.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t17.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t18.0",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t19.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t19.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t20.0",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t21.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t21.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t22.0",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t23.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t23.1",
+    "rule": "E-PROPOSAL",
+    "role": "assistant"
+   },
+   {
+    "loc": "t23.2",
+    "rule": "E-EXPLORATORY",
+    "role": "assistant"
+   },
+   {
+    "loc": "t24.0",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t25.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t25.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t26.0",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t27.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t27.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t28.0",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t29.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t29.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t30.0",
+    "rule": "E-FILLER",
+    "role": "user"
+   },
+   {
+    "loc": "t31.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t31.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t33.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t33.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t35.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t35.1",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t37.0",
+    "rule": "E-NARRATIVE",
+    "role": "assistant"
+   },
+   {
+    "loc": "t38.0",
+    "rule": "E-QUESTION",
+    "role": "user"
+   }
+  ],
+  "discard_counts": {
+   "E-FILLER": 14,
+   "E-NARRATIVE": 35,
+   "E-QUESTION": 4,
+   "E-EXPLORATORY": 2,
+   "E-ACK": 1,
+   "E-PROPOSAL": 1
+  },
+  "events": [
+   {
+    "loc": "t2.1",
+    "op": "define",
+    "ssa": "report_ieee.1",
+    "rule": "P-CONSTRAINT"
+   },
+   {
+    "loc": "t4.0",
+    "op": "define",
+    "ssa": "pages_max_including.1",
+    "rule": "P-CONSTRAINT-KW"
+   },
+   {
+    "loc": "t6.0",
+    "op": "scope",
+    "ssa": "s1",
+    "rule": "S-DIRECTIVE"
+   },
+   {
+    "loc": "t10.0",
+    "op": "define",
+    "ssa": "evaluation_metric.1",
+    "rule": "P-COPULA"
+   },
+   {
+    "loc": "t14.0",
+    "op": "define",
+    "ssa": "train_test_split.1",
+    "rule": "P-CHOICE"
+   },
+   {
+    "loc": "t16.1",
+    "op": "revise",
+    "ssa": "train_test_split.2",
+    "rule": "P-ASSIGN"
+   },
+   {
+    "loc": "t32.0",
+    "op": "scope",
+    "ssa": "s2",
+    "rule": "S-DIRECTIVE"
+   },
+   {
+    "loc": "t34.0",
+    "op": "define",
+    "ssa": "least_15_references.1",
+    "rule": "P-CONSTRAINT-KW"
+   },
+   {
+    "loc": "t36.0",
+    "op": "define",
+    "ssa": "related_work_section_choice.1",
+    "rule": "P-CHOICE"
+   }
+  ]
+ },
+ "store": {
+  "t0.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "hey, I need help with my machine learning course project report."
+  },
+  "t0.1": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "it's on predicting crop yield from weather data"
+  },
+  "t1.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Happy to help!"
+  },
+  "t1.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Crop yield prediction from weather data is a nice applied ML topic."
+  },
+  "t1.2": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Can you tell me a bit about the dataset you're using, the models you've tried, and what the report needs to contain?"
+  },
+  "t1.3": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Most course reports follow an Introduction, Related Work, Method, Experiments, Results, Conclusion structure."
+  },
+  "t2.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "dataset is the FAO crop yield dataset merged with NASA POWER weather data, about 28,000 rows."
+  },
+  "t2.1": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "report has to be in IEEE conference format"
+  },
+  "t3.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Good — FAO plus NASA POWER is a solid, well-documented combination, and 28,000 rows is plenty for classical models."
+  },
+  "t3.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "IEEE conference format means two columns, the IEEEtran LaTeX template, and numbered citations in square brackets."
+  },
+  "t3.2": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Do you know the page limit?"
+  },
+  "t4.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "6 pages max including references."
+  },
+  "t4.1": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "due date is December 5"
+  },
+  "t5.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Six pages including references is tight in two-column format, so we'll need to be economical — probably one table for results and two or three figures at most."
+  },
+  "t5.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "December 5 gives you a few weeks."
+  },
+  "t6.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "lets start with the methodology section"
+  },
+  "t7.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "For methodology I'd cover: data sources and merging, preprocessing (missing values, feature scaling), feature engineering (e.g. growing-season aggregates of temperature and rainfall), the models, and the evaluation protocol."
+  },
+  "t7.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Which models have you trained?"
+  },
+  "t8.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "we trained linear regression, random forest and XGBoost."
+  },
+  "t8.1": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "XGBoost did best"
+  },
+  "t9.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "That's a sensible progression from a simple baseline to ensemble methods."
+  },
+  "t9.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "In the write-up, present linear regression as the baseline so the gains from the tree models are clear."
+  },
+  "t10.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "the evaluation metric is RMSE"
+  },
+  "t11.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "RMSE is the standard choice for yield regression and is in the same units as the target, which makes it easy to interpret."
+  },
+  "t11.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "You might also report R² alongside it, since many related papers do."
+  },
+  "t12.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "ok we'll report R2 as well"
+  },
+  "t13.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Great — RMSE as the primary metric and R² as a secondary one."
+  },
+  "t13.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "I'll keep that consistent across all tables."
+  },
+  "t14.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "for the train test split we'll use an 80/20 random split"
+  },
+  "t15.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "An 80/20 random split works, but one caution: with yearly data, a random split can leak information because rows from the same year end up in both train and test."
+  },
+  "t15.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "A temporal split — train on earlier years, test on the most recent ones — is more honest for forecasting."
+  },
+  "t16.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "good point."
+  },
+  "t16.1": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "change the split to a temporal split, train on 1990-2015 and test on 2016-2020"
+  },
+  "t17.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "That's a much stronger protocol and reviewers will appreciate it."
+  },
+  "t17.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Your numbers will probably get a bit worse than with the random split, which is expected and worth mentioning briefly."
+  },
+  "t18.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "within this lets first figure out the hyperparameter tuning part"
+  },
+  "t19.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "For XGBoost, the most impactful hyperparameters are learning rate, max depth, number of estimators, and subsample ratio."
+  },
+  "t19.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "With a temporal split, use time-series cross-validation on the training years rather than random k-fold."
+  },
+  "t20.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "we used grid search with 5-fold time series CV"
+  },
+  "t21.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Grid search with 5-fold time-series cross-validation is a clean, easy-to-describe setup."
+  },
+  "t21.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "In the report, list the search grid in a small table or a single sentence to save space."
+  },
+  "t22.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "actually this is too much detail for 6 pages, lets move on to the results section"
+  },
+  "t23.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Agreed — a single sentence on tuning is enough."
+  },
+  "t23.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "For results, I'd suggest one main table: rows are models, columns are RMSE and R² on the 2016-2020 test set."
+  },
+  "t23.2": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Then one figure of predicted vs actual yield for XGBoost, and maybe a feature-importance bar chart."
+  },
+  "t24.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "XGBoost got RMSE of 0.42 t/ha on the test set"
+  },
+  "t25.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "That's a strong result."
+  },
+  "t25.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Make sure the table also reports the baseline linear regression RMSE so the reader can see the relative improvement."
+  },
+  "t26.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "lets also add a SHAP plot for feature importance"
+  },
+  "t27.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "SHAP is a good choice over plain gain-based importance since it's more consistent."
+  },
+  "t27.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "A SHAP summary (beeswarm) plot fits nicely in a single column."
+  },
+  "t28.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "wait, I rechecked and the XGBoost RMSE is actually 0.47 t/ha, I had a bug in the inverse scaling"
+  },
+  "t29.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Thanks for catching that — 0.47 t/ha is still a good result."
+  },
+  "t29.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "I'll update the numbers; it's much better to fix this now than after submission."
+  },
+  "t30.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "drop the SHAP plot, we're out of space"
+  },
+  "t31.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Makes sense given the 6-page limit."
+  },
+  "t31.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "A short sentence naming the top three features will cover it."
+  },
+  "t32.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "now lets work on the related work section"
+  },
+  "t33.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "For related work, group papers by approach: (1) statistical and crop-simulation models, (2) classical ML like random forests and SVR, and (3) deep learning approaches such as LSTMs and CNNs on remote-sensing data."
+  },
+  "t33.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Then position your work: classical ensemble methods on public weather data with a leakage-free temporal evaluation."
+  },
+  "t34.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "we need at least 15 references"
+  },
+  "t35.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Fifteen references is very doable — five per group would balance the section nicely."
+  },
+  "t35.1": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Use BibTeX with the IEEEtran bibliography style so the numbering and format are handled automatically."
+  },
+  "t36.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "we'll use Zotero to manage the references"
+  },
+  "t37.0": {
+   "role": "assistant",
+   "kind": "SENTENCE",
+   "text": "Zotero works well with LaTeX through the Better BibTeX plugin, which can auto-export a .bib file that stays in sync with your library."
+  },
+  "t38.0": {
+   "role": "user",
+   "kind": "SENTENCE",
+   "text": "ok, what should the first paragraph of related work say?"
+  }
+ }
+}

@@ -1,0 +1,19 @@
+{
+  "_note": "Follow-up questions, one per gold-list fact (heldout_ml_report_gold.json) plus one per abandoned/retracted item.",
+  "probes": [
+    {"id": "topic",      "q": "What is the project about?",                          "answer": ["crop yield"]},
+    {"id": "dataset",    "q": "Which datasets are we using?",                        "answer": ["NASA POWER", "FAO"]},
+    {"id": "format",     "q": "What format does the report have to follow?",         "answer": ["IEEE"]},
+    {"id": "pages",      "q": "What is the page limit?",                             "answer": ["6 pages"]},
+    {"id": "due",        "q": "When is the report due?",                             "answer": ["December 5", "Dec 5"]},
+    {"id": "models",     "q": "Which models did we train?",                          "answer": ["random forest"]},
+    {"id": "metric",     "q": "What is the main evaluation metric?",                 "answer": ["RMSE"]},
+    {"id": "r2",         "q": "Are we reporting any secondary metric?",              "answer": ["R2", "R²"]},
+    {"id": "split",      "q": "How are we splitting train and test data?",           "answer": ["temporal", "2016-2020", "2016–2020"], "stale": ["80/20"]},
+    {"id": "rmse_value", "q": "What test RMSE did XGBoost get?",                     "answer": ["0.47"], "stale": ["0.42"]},
+    {"id": "refs",       "q": "How many references do we need?",                     "answer": ["15"]},
+    {"id": "zotero",     "q": "What are we using to manage references?",             "answer": ["Zotero"]},
+    {"id": "grid",       "q": "Are we describing the grid search in detail?",        "not_current": "grid search"},
+    {"id": "shap",       "q": "Are we including the SHAP plot?",                     "not_current": "SHAP"}
+  ]
+}

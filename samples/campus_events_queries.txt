@@ -1,0 +1,5 @@
+Ok. What's left for us to do this week for the PM2 piece?
+What page size did we pick for pagination?
+Remind me what the deadline is again.
+Are we still doing push notifications?
+Should the error responses be HTML or JSON?

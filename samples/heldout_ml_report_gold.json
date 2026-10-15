@@ -1,0 +1,25 @@
+{
+  "_note": "HELD-OUT sample. Transcript, gold list and summary written after the extractor fixes; evaluated once with no further code changes.",
+  "expected_live": [
+    {"id": "topic",      "desc": "crop yield prediction from weather data",     "match": ["crop yield"]},
+    {"id": "dataset",    "desc": "FAO + NASA POWER, ~28,000 rows",              "match": ["NASA POWER", "FAO"]},
+    {"id": "format",     "desc": "IEEE conference format",                      "match": ["IEEE"]},
+    {"id": "pages",      "desc": "6 pages max incl. references",                "match": ["6 pages"]},
+    {"id": "due",        "desc": "due December 5",                              "match": ["December 5", "Dec 5"]},
+    {"id": "models",     "desc": "linear regression, random forest, XGBoost",   "match": ["random forest"]},
+    {"id": "metric",     "desc": "RMSE primary metric",                         "match": ["RMSE"]},
+    {"id": "r2",         "desc": "R2 reported as well",                         "match": ["R2", "R²"]},
+    {"id": "split",      "desc": "temporal split 1990-2015 / 2016-2020",        "match": ["temporal", "2016-2020"]},
+    {"id": "rmse_value", "desc": "XGBoost test RMSE 0.47 t/ha",                 "match": ["0.47"]},
+    {"id": "refs",       "desc": "at least 15 references",                      "match": ["15 references", "15"]},
+    {"id": "zotero",     "desc": "Zotero for references",                       "match": ["Zotero"]}
+  ],
+  "expected_dropped": [
+    {"id": "grid_search", "desc": "grid search / 5-fold CV detail (abandoned sub-topic)", "match": ["grid search", "5-fold"]},
+    {"id": "shap",        "desc": "SHAP plot (added then dropped)",                       "match": ["SHAP"]}
+  ],
+  "stale_values": [
+    {"id": "split_v1", "desc": "old 80/20 random split", "match": ["80/20"]},
+    {"id": "rmse_v1",  "desc": "old RMSE 0.42",          "match": ["0.42"]}
+  ]
+}

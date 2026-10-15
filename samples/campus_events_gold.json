@@ -1,0 +1,33 @@
+{
+  "_note": "Hand-written BEFORE running the pipeline. 'match' = any of these strings (case-insensitive) present in an artifact counts as the fact being carried. Not edited after seeing results.",
+  "expected_live": [
+    {"id": "roles",        "desc": "students browse, club organisers post",          "match": ["organiser"]},
+    {"id": "team",         "desc": "two-person team incl. Dhanjith",                 "match": ["Dhanjith"]},
+    {"id": "deadline",     "desc": "deadline is November 22",                        "match": ["November 22", "Nov 22"]},
+    {"id": "app_name",     "desc": "app is called CampusPulse",                      "match": ["CampusPulse"]},
+    {"id": "server",       "desc": "must run on college server, no cloud",           "match": ["college server"]},
+    {"id": "anon_browse",  "desc": "students browse without an account",             "match": ["account"]},
+    {"id": "categories",   "desc": "categories: tech, cultural, sports, academic",   "match": ["cultural"]},
+    {"id": "backend",      "desc": "backend is Express",                             "match": ["Express"]},
+    {"id": "database",     "desc": "database is PostgreSQL",                         "match": ["PostgreSQL", "Postgres"]},
+    {"id": "frontend",     "desc": "frontend is React with Vite",                    "match": ["React"]},
+    {"id": "image",        "desc": "one image per event, max 2 MB",                  "match": ["2 MB", "2MB"]},
+    {"id": "migrations",   "desc": "Knex for migrations",                            "match": ["Knex"]},
+    {"id": "auth",         "desc": "session cookies for organiser auth",             "match": ["session"]},
+    {"id": "json_errors",  "desc": "every API response must be JSON",                "match": ["JSON"]},
+    {"id": "pagination",   "desc": "offset pagination, 20 per page",                 "match": ["20"]},
+    {"id": "tests",        "desc": "Jest + Supertest for backend tests",             "match": ["Supertest"]},
+    {"id": "coverage",     "desc": "backend coverage >= 70%",                        "match": ["70%", "70 %"]},
+    {"id": "port",         "desc": "app runs on port 3000",                          "match": ["3000"]}
+  ],
+  "expected_dropped": [
+    {"id": "notif_latency", "desc": "notifications within 5 minutes (abandoned sub-topic)", "match": ["5 minutes"]},
+    {"id": "dark_mode",     "desc": "dark mode (decided, then retracted)",                "match": ["dark mode"]},
+    {"id": "rsvp",          "desc": "RSVP (exploratory, never decided)",                   "match": ["RSVP"]}
+  ],
+  "stale_values": [
+    {"id": "deadline_v1", "desc": "old deadline November 15", "match": ["November 15", "Nov 15"]},
+    {"id": "app_name_v1", "desc": "old name EventHub",        "match": ["EventHub"]},
+    {"id": "database_v1", "desc": "old database MongoDB",     "match": ["MongoDB"]}
+  ]
+}

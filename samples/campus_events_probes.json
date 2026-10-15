@@ -1,0 +1,26 @@
+{
+  "_note": "Follow-up questions a new session might be asked. One per gold-list fact (campus_events_gold.json), phrased the way a user would ask, plus one per abandoned/retracted item. Answers are the gold match strings, made stricter where the gold string alone would not answer the question.",
+  "probes": [
+    {"id": "roles",       "q": "Who posts events and who just browses them?",       "answer": ["organiser"]},
+    {"id": "team",        "q": "Who is on the team with me?",                         "answer": ["Dhanjith"]},
+    {"id": "deadline",    "q": "When is the project deadline?",                       "answer": ["November 22", "Nov 22"], "stale": ["November 15", "Nov 15"]},
+    {"id": "app_name",    "q": "What is the app called?",                             "answer": ["CampusPulse"], "stale": ["EventHub"]},
+    {"id": "server",      "q": "Where does the app have to be hosted?",               "answer": ["college server"]},
+    {"id": "anon_browse", "q": "Do students need an account to browse events?",       "answer": ["not need an account", "do not need an account", "without an account", "no account"]},
+    {"id": "categories",  "q": "What event categories do we support?",                "answer": ["cultural"]},
+    {"id": "backend",     "q": "What backend framework are we using?",                "answer": ["Express"]},
+    {"id": "database",    "q": "Which database are we using?",                        "answer": ["PostgreSQL", "Postgres"], "stale": ["MongoDB"]},
+    {"id": "frontend",    "q": "What is the frontend built with?",                    "answer": ["React"]},
+    {"id": "image",       "q": "What is the size limit for event images?",            "answer": ["2 MB", "2MB"]},
+    {"id": "migrations",  "q": "What tool handles database migrations?",              "answer": ["Knex"]},
+    {"id": "auth",        "q": "How do organisers stay logged in?",                   "answer": ["session"]},
+    {"id": "json",        "q": "What format should API error responses use?",         "answer": ["JSON"]},
+    {"id": "pagination",  "q": "How many events are shown per page?",                 "answer": ["20"]},
+    {"id": "tests",       "q": "What do we use for backend tests?",                   "answer": ["Supertest"]},
+    {"id": "coverage",    "q": "What backend test coverage do we need?",              "answer": ["70%", "70 %"]},
+    {"id": "port",        "q": "Which port does the app run on?",                     "answer": ["3000"]},
+    {"id": "notif",       "q": "Are push notifications still part of the plan?",      "not_current": "notification"},
+    {"id": "dark_mode",   "q": "Is dark mode still in the plan?",                     "not_current": "dark mode"},
+    {"id": "rsvp",        "q": "Are we building an RSVP feature?",                    "not_current": "RSVP"}
+  ]
+}

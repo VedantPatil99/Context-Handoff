@@ -1,0 +1,10 @@
+CTXIR/1 src=heldout_ml_report_chat.txt turns=39 | live=4 const=4 var=0 | dropped=3 (R-SCOPE 2, R-SSA 1)
+Compiled conversation state. Values are current; ask to resolve(<name>) for original wording/history.
+SCOPES (*active, x closed) +1 closed w/o live facts
+*s0 conversation
+  *s2 related work section  <- current
+CONST
+K0 report_ieee = Report has to be in IEEE conference format [con s0]
+K1 pages_max_including = 6 pages max including references [con s0]
+K2 least_15_references = We need at least 15 references [con s2]
+K3 related_work_section_choice = Zotero to manage the references [cho s2]

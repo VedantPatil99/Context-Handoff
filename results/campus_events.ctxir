@@ -1,0 +1,21 @@
+CTXIR/1 src=campus_events_chat.txt turns=69 | live=10 const=7 var=3 | dropped=9 (R-KILL 1, R-SCOPE 5, R-SSA 3)
+Compiled conversation state. Values are current; ask to resolve(<name>) for original wording/history.
+SCOPES (*active, x closed) +2 closed w/o live facts
+*s0 conversation
+  xs2 tech stack
+    xs4 data model
+    xs5 API design
+  *s6 testing and deployment
+    *s7 PM2 setup on the server  <- current
+CONST
+K0 everything_run = Everything has to run on the college server, we don't get cloud credits [con s0 pin]
+K1 backend = Express [cho s2]
+K2 frontend = React with Vite [cho s2]
+K3 migrations = Knex [cho s4]
+K4 auth = session cookies [cho s5]
+K5 backend_tests = Jest and Supertest [cho s6]
+K6 test_coverage_least = Test coverage must be at least 70% for the backend [con s6]
+VAR
+deadline.2 = November 22 [fact s5, 1 prior]
+app_name.2 = CampusPulse [fact s5, 1 prior]
+database.2 = PostgreSQL [cho s4, 1 prior]

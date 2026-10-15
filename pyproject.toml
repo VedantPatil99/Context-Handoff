@@ -1,0 +1,16 @@
+[project]
+name = "ctxc"
+version = "0.1.0"
+description = "Auditable context handoff for LLM conversations using compiler IR concepts"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+exact-tokens = ["tiktoken"]
+test = ["pytest"]
+
+[project.scripts]
+ctxc = "ctxc.cli:main"
+
+[tool.setuptools]
+packages = ["ctxc"]

@@ -1,0 +1,27 @@
+{
+  "_note": "FRESH HELD-OUT sample, written before any v2 improvement was implemented. Not to be edited after results are seen.",
+  "expected_live": [
+    {"id": "name",         "desc": "event is called HackVIT",                   "match": ["HackVIT"]},
+    {"id": "participants", "desc": "around 300 participants",                   "match": ["300"]},
+    {"id": "team_size",    "desc": "teams of up to 4",                          "match": ["up to 4", "4 people"]},
+    {"id": "duration",     "desc": "24 hours starting Saturday morning",        "match": ["24 hour", "24-hour"]},
+    {"id": "venue",        "desc": "venue is Anna Auditorium",                  "match": ["Anna Auditorium"]},
+    {"id": "date",         "desc": "date is 21 February",                       "match": ["21 February", "Feb 21", "21st"]},
+    {"id": "budget",       "desc": "total budget 2 lakh rupees",                "match": ["2 lakh", "2,00,000", "200,000"]},
+    {"id": "food_cap",     "desc": "food capped at 90,000",                     "match": ["90,000"]},
+    {"id": "end_time",     "desc": "hacking ends 10 am Sunday",                 "match": ["10 am", "10:00", "10am"]},
+    {"id": "devpost",      "desc": "Devpost for submissions",                   "match": ["Devpost"]},
+    {"id": "sponsor",      "desc": "title sponsor is Zoho",                     "match": ["Zoho"]},
+    {"id": "sponsor_date", "desc": "sponsors confirmed by 31 January",          "match": ["31 January", "Jan 31"]},
+    {"id": "prizes",       "desc": "prizes 30,000 / 20,000 / 10,000",           "match": ["30,000"]},
+    {"id": "judges",       "desc": "4 judges",                                  "match": ["4 judges", "four judges"]},
+    {"id": "criteria",     "desc": "innovation, technical difficulty, presentation, equal weight", "match": ["technical difficulty"]}
+  ],
+  "expected_dropped": [
+    {"id": "merch",      "desc": "merch / hoodies / student designer (abandoned sub-topic)", "match": ["hoodie", "student designer"]},
+    {"id": "livestream", "desc": "YouTube livestream (added, then retracted)",              "match": ["livestream"]}
+  ],
+  "stale_values": [
+    {"id": "date_v1", "desc": "old date 14 February", "match": ["14 February", "Feb 14"]}
+  ]
+}

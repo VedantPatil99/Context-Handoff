@@ -1,0 +1,11 @@
+Summary of the conversation so far:
+
+The user and their teammate Dhanjith are building CampusPulse (originally named EventHub, renamed because the name was taken), a web app for a web technologies course where students browse campus events and club organisers post them. Students do not need an account to browse; only organisers log in. The deadline was moved from November 15 to November 22. Everything must run on the college server — no cloud services or credits.
+
+Requirements: event list sorted by date, filtering by category (tech, cultural, sports, academic), event details, and organiser create/edit/delete. RSVP was considered but skipped because it would require student accounts. Dark mode was briefly added and then dropped in favour of spending time on testing.
+
+Tech stack: Express backend, React with Vite frontend (Express serves the built files), and PostgreSQL (switched from MongoDB because the data is relational and Postgres is already installed on the server). Knex handles migrations. Events have one image each, max 2 MB, stored on disk. Web push notifications were explored but deferred as a stretch goal.
+
+API: REST endpoints for events and organiser login, session-cookie auth via express-session stored in Postgres, all responses (including errors) must be JSON, and offset pagination with 20 events per page.
+
+Current work: testing and deployment. Backend tests use Jest and Supertest with at least 70% coverage. The user is currently setting up PM2 on the college server; the app runs on port 3000 via an ecosystem.config.js. The user's latest question is what remains to be done this week for the PM2 setup.

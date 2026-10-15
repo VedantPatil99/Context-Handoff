@@ -1,0 +1,389 @@
+<title>Context Compiler Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one readable column that tells the story top to bottom: result, how it works, comparison. */
+:root {
+  --bg: #f4f6f9; --panel: #ffffff; --sunk: #eaeef4; --line: #d6dce6; --fg: #172030; --muted: #586379;
+  --accent: #2a4ccc; --summary: #7b3fd1; --good: #2c8a4c; --bad: #c23a3a; --warn: #a86d12;
+  --f-display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e121a; --panel: #151b25; --sunk: #1b2230; --line: #2a3344; --fg: #e3e8f1; --muted: #98a3b8;
+  --accent: #8fa8ff; --summary: #b591ff; --good: #62cf8a; --bad: #ff8080; --warn: #e2ad55; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0e121a; --panel: #151b25; --sunk: #1b2230; --line: #2a3344; --fg: #e3e8f1; --muted: #98a3b8;
+  --accent: #8fa8ff; --summary: #b591ff; --good: #62cf8a; --bad: #ff8080; --warn: #e2ad55; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.6 var(--f-body); margin: 0; }
+.wrap { max-width: 980px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 56px; display: flex; flex-direction: column; gap: 40px; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 600; text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: 2rem; } h2 { font-size: 1.45rem; } h3 { font-size: 1.08rem; }
+p { margin: 0; }
+code, pre, .mono { font-family: var(--f-mono); font-size: 13px; }
+pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.muted { color: var(--muted); }
+.label { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.lead { color: var(--muted); max-width: 68ch; }
+section { display: flex; flex-direction: column; gap: 16px; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px; min-width: 0; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+header { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: end; justify-content: space-between; }
+header .t { display: flex; flex-direction: column; gap: 6px; }
+.switch { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.switch button { font: inherit; font-size: 14px; color: var(--fg); background: var(--panel); border: 0; padding: 7px 12px; cursor: pointer; }
+.switch button + button { border-left: 1px solid var(--line); }
+.switch button[aria-pressed="true"] { background: var(--accent); color: var(--panel); }
+
+/* result bars */
+.bars { display: flex; flex-direction: column; gap: 14px; }
+.row { display: grid; grid-template-columns: 150px minmax(0, 1fr) 200px; gap: 14px; align-items: center; }
+.row .name { font-weight: 600; }
+.track { height: 26px; background: var(--sunk); border-radius: 6px; overflow: hidden; }
+.fill { height: 100%; border-radius: 6px; background: var(--muted); }
+.fill.sum { background: var(--summary); } .fill.ir { background: var(--accent); }
+.row .nums { font-variant-numeric: tabular-nums; font-size: 14px; }
+.row .nums b { font-family: var(--f-display); font-size: 1.15rem; }
+@media (max-width: 640px) { .row { grid-template-columns: minmax(0, 1fr) auto; } .row .track { grid-column: 1 / -1; grid-row: 2; } }
+.verdict { border-left: 4px solid var(--accent); padding: 4px 0 4px 14px; max-width: 72ch; }
+
+/* steps */
+.steps { display: flex; flex-direction: column; gap: 14px; counter-reset: step; }
+.step { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 14px; }
+.step::before { counter-increment: step; content: counter(step); font-family: var(--f-display); font-weight: 600; font-size: 1.2rem;
+  width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--panel); }
+.step .panel { display: flex; flex-direction: column; gap: 12px; }
+.step .concept { font-size: 13px; color: var(--muted); }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+@media (max-width: 760px) { .two { grid-template-columns: minmax(0, 1fr); } }
+.list { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.list li { display: flex; flex-direction: column; gap: 2px; font-size: 14px; }
+.quote { color: var(--fg); }
+.why { font-size: 12.5px; color: var(--muted); }
+.mark-good { color: var(--good); font-weight: 600; } .mark-bad { color: var(--bad); font-weight: 600; } .mark-warn { color: var(--warn); font-weight: 600; }
+
+.chain { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.ver { font-family: var(--f-mono); font-size: 13px; padding: 2px 8px; border-radius: 5px; border: 1px solid var(--line); background: var(--sunk); }
+.ver.old { text-decoration: line-through; color: var(--muted); }
+.ver.now { border-color: var(--good); color: var(--good); background: color-mix(in srgb, var(--good) 10%, var(--panel)); }
+
+.tree { display: flex; flex-direction: column; gap: 4px; }
+.node { display: flex; align-items: center; gap: 8px; font-size: 14px; flex-wrap: wrap; }
+.tag { font-size: 12px; padding: 0 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.tag.open { border-color: var(--good); color: var(--good); }
+.tag.here { border-color: var(--accent); color: var(--accent); }
+.dropgroup { display: flex; flex-direction: column; gap: 6px; }
+.warnbox { border: 1px solid color-mix(in srgb, var(--warn) 50%, transparent); background: color-mix(in srgb, var(--warn) 9%, var(--panel)); border-radius: 8px; padding: 10px 12px; font-size: 14px; }
+
+/* compare */
+.artifact { background: var(--sunk); border-radius: 8px; padding: 14px; max-height: 460px; overflow: auto; }
+.artifact p + p { margin-top: 10px; }
+.tbl { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-size: 12px; color: var(--muted); font-weight: 600; padding: 6px 10px; border-bottom: 1px solid var(--line); }
+td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+td.c { white-space: nowrap; }
+.empty { border: 1px dashed var(--line); border-radius: 8px; padding: 16px; color: var(--muted); display: flex; flex-direction: column; gap: 8px; }
+/* server mode: input + loader */
+.inbox { display: flex; flex-direction: column; gap: 12px; }
+.inbox textarea, .qrow input { width: 100%; font: 13px/1.5 var(--f-mono); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px; resize: vertical; }
+.inbox textarea#t-in { min-height: 150px; } .inbox textarea#s-in { min-height: 70px; }
+.inrow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.btn { font: inherit; font-size: 14px; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 7px 14px; cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--panel); }
+.btn:disabled { opacity: .55; cursor: progress; }
+.err { color: var(--bad); font-size: 14px; }
+.status { font-size: 13px; color: var(--muted); }
+details summary { cursor: pointer; font-weight: 600; }
+.qrow { display: flex; gap: 8px; } .qrow input { flex: 1; font-family: var(--f-body); font-size: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: inherit; font-size: 13px; color: var(--fg); background: var(--sunk); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; cursor: pointer; text-align: left; }
+.chip:hover { border-color: var(--accent); }
+.meter { display: flex; height: 12px; border-radius: 4px; overflow: hidden; background: var(--sunk); }
+.meter span { display: block; height: 100%; }
+.qlog { display: flex; flex-direction: column; gap: 10px; }
+.res { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; background: var(--panel); }
+footer { font-size: 13px; color: var(--muted); display: flex; flex-direction: column; gap: 4px; }
+</style>
+
+<main class="wrap">
+  <header>
+    <div class="t">
+      <span class="label">Compiler Design Lab · ctxc</span>
+      <h1>Context Compiler Explorer</h1>
+      <p class="lead">When a chat with an AI gets too long, it has to be handed off to a fresh session. The usual way is a prose summary. This project instead compiles the chat into a small structured IR, using compiler ideas. Here is how the two compare.</p>
+    </div>
+    <div class="switch" role="group" aria-label="Sample chat" id="samples"></div>
+  </header>
+
+  <section id="sec-input" hidden>
+    <details class="panel inbox" id="own">
+      <summary>Compile your own chat</summary>
+      <p class="muted" style="font-size:14px">Paste a transcript with lines starting <code>User:</code> and <code>Assistant:</code>, or choose a file: plain text, JSON messages, a chat-app data export, or JSON Lines. It is compiled by the Python pipeline on this computer.</p>
+      <label class="label" for="t-in">Transcript</label>
+      <textarea id="t-in" placeholder="User: Let's call the project CampusPulse.&#10;Assistant: Sounds good.&#10;User: The deadline is November 22."></textarea>
+      <div class="inrow"><label class="btn" for="t-file">Choose file…</label><input type="file" id="t-file" accept=".txt,.md,.json,.jsonl" hidden><span class="status" id="t-name"></span></div>
+      <label class="label" for="s-in">Prose summary to compare against (optional)</label>
+      <textarea id="s-in" placeholder="Paste a summary of the same chat, e.g. one written by an AI assistant."></textarea>
+      <div class="inrow"><button class="btn primary" type="button" id="compile">Compile</button><span class="err" id="err" role="alert"></span></div>
+    </details>
+  </section>
+
+  <section>
+    <h2 id="r-title">The result</h2>
+    <div class="panel bars" id="bars"></div>
+    <p class="verdict" id="verdict"></p>
+  </section>
+
+  <section id="sec-probes" hidden>
+    <div><h2>Does the IR lose context?</h2><p class="lead">Smaller only counts if the new session can still answer questions about the chat. Each question below goes to a fresh session that has only the handoff. For the IR, that is the IR plus whatever the loader fetches for the question.</p></div>
+    <div class="panel bars" id="pbars"></div>
+    <p class="verdict" id="pverdict"></p>
+    <details class="panel"><summary>See every question</summary><div class="tbl" style="margin-top:12px"><table id="ptable"></table></div></details>
+    <p class="muted" style="font-size:13px;max-width:80ch">"Answerable" means the information needed for the answer is in what the new session receives. It does not test whether a model would then answer correctly. Questions were written from the expected-fact list, one per fact, plus one per abandoned or cancelled item.</p>
+  </section>
+
+  <section>
+    <div><h2>How the compiler works</h2><p class="lead">Four passes, each shown on this chat.</p></div>
+    <div class="steps">
+      <div class="step"><div class="panel">
+        <h3>Pick out the decisions</h3>
+        <p class="concept">Like a parser: pattern rules read each sentence and keep only settled facts.</p>
+        <div class="two" id="s1"></div>
+      </div></div>
+      <div class="step"><div class="panel">
+        <h3>A change becomes a new version, not an overwrite</h3>
+        <p class="concept">Static Single Assignment (SSA): each version is written once, and the old one is kept in the history.</p>
+        <div class="list" id="s2"></div>
+      </div></div>
+      <div class="step"><div class="panel">
+        <h3>Phases of the chat become scopes</h3>
+        <p class="concept">Like nested blocks in a program. Each fact belongs to the phase it was stated in. Phases still open at the end of the chat are the "active" ones.</p>
+        <div class="tree" id="s3"></div>
+      </div></div>
+      <div class="step"><div class="panel">
+        <h3>Drop what is no longer reachable</h3>
+        <p class="concept">Dead-code elimination: a fact survives only if its phase is still open, or it was mentioned again in an open phase. Every drop is logged with its reason.</p>
+        <div class="list" id="s4"></div>
+      </div></div>
+    </div>
+  </section>
+
+  <section>
+    <div><h2>The two handoffs, side by side</h2><p class="lead">This is everything a new session would receive.</p></div>
+    <div class="two">
+      <div class="panel" style="display:flex;flex-direction:column;gap:10px"><h3>Prose summary <span class="muted mono" id="sum-t"></span></h3><div class="artifact" id="sum"></div></div>
+      <div class="panel" style="display:flex;flex-direction:column;gap:10px"><h3>Context IR <span class="muted mono" id="ir-t"></span></h3><div class="artifact"><pre id="ir"></pre></div></div>
+    </div>
+  </section>
+
+  <section id="sec-facts">
+    <div><h2>Which facts made it through?</h2><p class="lead">Checked against a list of facts that a good handoff should keep, written before the program was run.</p></div>
+    <div class="panel tbl"><table id="facts"></table></div>
+  </section>
+
+  <section>
+    <div><h2>Can you tell what was thrown away?</h2><p class="lead">This is where the IR is better.</p></div>
+    <div class="two">
+      <div class="panel" style="display:flex;flex-direction:column;gap:10px"><h3>Context IR: yes</h3><div class="tbl"><table id="drops"></table></div></div>
+      <div class="panel" style="display:flex;flex-direction:column;gap:10px"><h3>Prose summary: no</h3>
+        <div class="empty"><p>The summary is plain text. Nothing in it says what was left out or why, or which part of the chat a sentence came from.</p><p id="sum-miss"></p></div></div>
+    </div>
+  </section>
+
+  <section id="sec-loader" hidden>
+    <div><h2>Ask a follow-up in the new session</h2><p class="lead">The new session starts with only the Context IR. When your message mentions a fact, the loader fetches that one fact's original sentences and history from the compiled bundle. Facts that were dropped can still be fetched, with the reason they were dropped.</p></div>
+    <div class="panel inbox">
+      <form class="qrow" id="qform"><label for="q" hidden>Message</label><input id="q" placeholder="e.g. what's the deadline again?" autocomplete="off"><button class="btn primary" type="submit">Send</button><button class="btn" type="button" id="qreset">Start over</button></form>
+      <div class="chips" id="qchips"></div>
+      <div class="meter" id="meter"></div><div class="status" id="metertext"></div>
+    </div>
+    <div class="qlog" id="qlog"></div>
+  </section>
+
+  <footer>
+    <p id="note"></p>
+    <p id="modenote"></p>
+  </footer>
+</main>
+
+<script>
+/* Two modes. Static file: DATA holds pre-compiled samples. Served by `ctxc serve`: DATA is null and
+   everything comes from the Python backend (/api/compile, /api/query). */
+const DATA = /*__DATA__*/null;
+const LIVE = DATA === null;
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const pct = (n, d) => Math.round(100 * n / d) + "%";
+const SKIP = { "E-QUESTION": "a question, not a decision", "E-EXPLORATORY": "only an idea (“maybe”, “I was thinking”)", "E-ACK": "just an acknowledgement" };
+const DROP = { "R-SSA": "Replaced by a newer version", "R-KILL": "Cancelled by the user", "R-SCOPE": "Its phase finished and it was not mentioned again" };
+
+let SAMPLES = [], current = null, active = null, tokenizer = DATA ? DATA.tokenizer : "";
+
+async function api(path, body) {
+  const r = await fetch(path, body === undefined ? {} : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const j = await r.json().catch(() => ({ error: `The server answered ${r.status}.` }));
+  if (!r.ok) throw new Error(j.error || `The server answered ${r.status}.`);
+  return j;
+}
+
+function renderSwitch() {
+  $("samples").innerHTML = SAMPLES.map((s) => `<button type="button" aria-pressed="${s.id === active}" data-id="${esc(s.id)}">${esc(s.title.replace(/\s*\(.*\)/, ""))}</button>`).join("")
+    + (LIVE && active === "own" ? '<button type="button" aria-pressed="true" data-id="own">Your chat</button>' : "");
+}
+
+function render(sm) {
+  current = sm; tokenizer = sm.tokenizer || tokenizer;
+  const c = sm.configs.strict, t = sm.tokens, L = sm.lexemes, hasSum = t.summary !== null, G = sm.gold;
+  const n = G ? G.live.length : 0;
+  const sumK = G && hasSum ? G.live.filter((g) => g.summary).length : null, irK = G ? G.live.filter((g) => g.strict.in_header).length : null;
+  renderSwitch();
+  $("r-title").textContent = `The result: a ${t.full.toLocaleString()}-token chat, handed off ${hasSum ? "two ways" : "as a Context IR"}`;
+
+  const rows = [["Full chat", t.full, "", `${t.full.toLocaleString()} tokens`, "everything"]];
+  if (hasSum) rows.push(["Prose summary", t.summary, "sum", `${t.summary} tokens · ${pct(t.summary, t.full)}`, G ? `kept ${sumK}/${n} facts` : ""]);
+  rows.push(["Context IR", t.strict, "ir", `${t.strict} tokens · ${pct(t.strict, t.full)}`, G ? `kept ${irK}/${n} facts` : ""]);
+  $("bars").innerHTML = rows.map(([nm, v, cls, a, b]) => `<div class="row"><span class="name">${nm}</span><div class="track"><div class="fill ${cls}" style="width:${(100 * v / t.full).toFixed(2)}%"></div></div><span class="nums"><b>${a.split(" ")[0]}</b> ${esc(a.slice(a.indexOf(" ")))}<br><span class="muted">${b}</span></span></div>`).join("");
+  $("verdict").innerHTML = hasSum && G
+    ? `The Context IR is <b>${t.strict < t.summary ? "smaller" : "larger"}</b> than the prose summary (${t.strict} vs ${t.summary} tokens), but it kept <b>${irK < sumK ? "fewer" : irK > sumK ? "more" : "the same number"} of the facts that matter</b> (${irK} vs ${sumK} of ${n}). Its strength is that every fact it dropped comes with a reason, which the summary cannot offer.`
+    : hasSum ? `The Context IR is <b>${t.strict < t.summary ? "smaller" : "larger"}</b> than the prose summary (${t.strict} vs ${t.summary} tokens). There is no list of expected facts for this chat, so which one kept more of what matters is not scored.`
+    : `The Context IR is ${pct(t.strict, t.full)} of the chat. Paste a prose summary of the same chat to compare against it.`;
+
+  renderProbes(sm.probes);
+
+  const kept = L.filter((l) => l.role === "user" && l.events.some((e) => e.op === "define")).slice(0, 3);
+  const skipped = L.filter((l) => l.role === "user" && SKIP[l.discard]).slice(0, 3);
+  $("s1").innerHTML = `<div><div class="label mark-good">Kept as facts</div><ul class="list">${kept.map((l) => {
+      const e = l.events.find((x) => x.op === "define");
+      return `<li><span class="quote">“${esc(l.text)}”</span><span class="why">became <code>${esc(e.ssa)}</code></span></li>`; }).join("") || '<li class="muted">No facts were picked out.</li>'}</ul></div>
+    <div><div class="label muted">Skipped</div><ul class="list">${skipped.map((l) => `<li><span class="quote">“${esc(l.text)}”</span><span class="why">${SKIP[l.discard]}</span></li>`).join("") || '<li class="muted">Nothing skipped as a question or idea.</li>'}</ul></div>`;
+
+  const multi = Object.entries(c.symbols).filter(([, s]) => s.versions.length > 1).slice(0, 3);
+  const textAt = (loc) => (L.find((l) => l.loc === loc) || {}).text || "";
+  $("s2").innerHTML = multi.length ? multi.map(([name, s]) => `<div><div class="chain">${s.versions.map((v, i) =>
+      `<span class="ver ${i < s.versions.length - 1 ? "old" : "now"}">${esc(name)}.${v.n} = ${esc(v.value)}</span>`).join('<span class="muted">→</span>')}</div>
+      <p class="why" style="margin-top:4px">Changed by: “${esc(textAt(s.versions[s.versions.length - 1].loc))}”</p></div>`).join("")
+    : '<p class="muted">No fact changed value in this chat.</p>';
+
+  const cur = c.active_chain[0];
+  $("s3").innerHTML = c.scopes.map((s) => {
+    const tag = s.id === cur ? '<span class="tag here">you are here</span>' : s.active ? '<span class="tag open">still open</span>' : '<span class="tag">finished</span>';
+    return `<div class="node" style="padding-left:${s.depth * 22}px"><span>${s.depth ? "└ " : ""}${esc(s.parent === null ? "Whole chat" : s.name)}</span>${tag}</div>`;
+  }).join("") + (c.scopes.length === 1 ? '<p class="muted">No phase changes were detected, so everything belongs to the whole chat.</p>' : "");
+
+  const groups = {};
+  c.dropped.forEach((d) => (groups[d.rule] = groups[d.rule] || []).push(d));
+  const needed = G ? G.live.filter((g) => g.strict.status === "dropped").map((g) => g.desc) : [];
+  $("s4").innerHTML = (["R-SSA", "R-KILL", "R-SCOPE"].filter((r) => groups[r]).map((r) => `<div class="dropgroup"><div><b>${DROP[r]}</b> <span class="muted">(${groups[r].length})</span></div>
+      <div class="chain">${groups[r].map((d) => `<span class="ver old" title="${esc(d.justification)}">${esc(d.value.length > 50 ? d.value.slice(0, 48) + "…" : d.value)}</span>`).join("")}</div></div>`).join("") || '<p class="muted">Nothing was dropped.</p>')
+    + (needed.length ? `<div class="warnbox"><span class="mark-warn">Problem:</span> some of these were still needed later: ${esc(needed.join("; "))}. Finishing a phase does not mean its facts stop mattering.</div>` : "");
+
+  $("sum").innerHTML = hasSum ? sm.summary.split(/\n\s*\n/).map((p) => `<p>${esc(p)}</p>`).join("") : '<p class="muted">No summary given for this chat.</p>';
+  $("sum-t").textContent = hasSum ? t.summary + " tokens" : ""; $("ir").textContent = c.header; $("ir-t").textContent = t.strict + " tokens";
+
+  $("sec-facts").hidden = !G;
+  if (G) {
+    const irCell = (f) => f.status === "carried" ? '<span class="mark-good">✓ kept</span>'
+      : f.status === "dropped" ? `<span class="mark-bad">✗ dropped</span> <span class="why">${f.rule === "R-SCOPE" ? "phase finished" : DROP[f.rule] || f.rule}</span>`
+      : '<span class="mark-bad">✗ missed</span> <span class="why">rules never picked it out</span>';
+    const sCell = (b) => b === null ? '<span class="muted">—</span>' : b ? '<span class="mark-good">✓ kept</span>' : '<span class="mark-bad">✗ missing</span>';
+    $("facts").innerHTML = `<thead><tr><th>Fact</th><th>Prose summary</th><th>Context IR</th></tr></thead><tbody>${G.live.map((g) =>
+      `<tr><td>${esc(g.desc)}</td><td class="c">${sCell(g.summary)}</td><td>${irCell(g.strict)}</td></tr>`).join("")}
+      <tr><td><b>Total</b></td><td class="c"><b>${sumK === null ? "—" : sumK + " / " + n}</b></td><td><b>${irK} / ${n}</b></td></tr></tbody>`;
+  }
+
+  $("drops").innerHTML = `<thead><tr><th>Dropped</th><th>Reason</th></tr></thead><tbody>${c.dropped.map((d) =>
+    `<tr><td>${esc(d.value)}</td><td><span class="why" style="font-size:13px">${DROP[d.rule]}</span><br><span class="why mono">${esc(d.rule)} · from ${esc(d.loc)}</span></td></tr>`).join("") || '<tr><td colspan="2" class="muted">Nothing was dropped.</td></tr>'}</tbody>`;
+  const miss = G && hasSum ? G.live.filter((g) => !g.summary).map((g) => g.desc) : [];
+  $("sum-miss").textContent = !hasSum ? "No summary was given for this chat."
+    : !G ? "Without a separate list of expected facts, there is no way to tell what this summary left out."
+    : miss.length ? `Compared with the fact list, it is missing: ${miss.join("; ")}, but nothing in the summary tells you that.`
+    : "Here it happened to miss nothing, but you could only check that by comparing it against a separate list of facts.";
+  $("note").textContent = `${sm.note || ""} Token counts: ${tokenizer}.${sm.id ? " The prose summary was written by an AI assistant, the way an LLM auto-compaction summarises." : ""}`;
+
+  if (LIVE) renderLoader(sm.queries, { header_tokens: c.header_tokens, expanded_tokens: 0 }, true);
+}
+
+function renderProbes(P) {
+  $("sec-probes").hidden = !P;
+  if (!P) return;
+  const T = P.totals, n = P.n, hasSum = !!T.summary;
+  const rows = [];
+  if (hasSum) rows.push(["Prose summary", T.summary.answerable, "sum", `${P.tokens.summary} tokens`]);
+  rows.push(["Context IR + loader", T.ir.answerable, "ir", `${P.tokens.ir_avg} tokens on average`]);
+  rows.push(["IR header alone", T.header.answerable, "", `${P.tokens.header} tokens`]);
+  $("pbars").innerHTML = rows.map(([nm, v, cls, tk]) => `<div class="row"><span class="name">${nm}</span><div class="track"><div class="fill ${cls}" style="width:${(100 * v / n).toFixed(2)}%"></div></div><span class="nums"><b>${v}/${n}</b> answerable<br><span class="muted">${tk}</span></span></div>`).join("");
+  const s = hasSum ? T.summary.answerable : null, i = T.ir.answerable, lift = i - T.header.answerable;
+  $("pverdict").innerHTML = hasSum
+    ? (i < s ? `<b>Yes, the IR loses context.</b> The new session could answer ${i} of ${n} questions from the IR, against ${s} of ${n} from the prose summary. `
+       : i === s ? `<b>No measurable loss here.</b> Both handoffs could answer ${i} of ${n} questions. `
+       : `<b>The IR did better here:</b> ${i} vs ${s} of ${n} questions. `)
+      + `The loader recovered ${lift} answer${lift === 1 ? "" : "s"} the IR header alone could not give, and the IR used ${P.tokens.ir_avg} tokens per question on average against ${P.tokens.summary} for the summary.`
+      + (T.ir.wrong || T.summary.wrong ? ` Wrong answers (an outdated value or a cancelled item shown as current): IR ${T.ir.wrong}, summary ${T.summary.wrong}.` : " Neither handoff gave an outdated value as the answer.")
+    : `The new session could answer ${i} of ${n} questions from the IR. Add a prose summary to compare.`;
+  const cell = (v) => v === null ? '<span class="muted">—</span>' : v === "answerable" ? '<span class="mark-good">✓ answerable</span>' : v === "wrong" ? '<span class="mark-bad">✗ wrong</span>' : '<span class="mark-warn">– no info</span>';
+  $("ptable").innerHTML = `<thead><tr><th>Question</th>${hasSum ? "<th>Prose summary</th>" : ""}<th>Context IR</th><th>Loader fetched</th></tr></thead><tbody>${P.rows.map((r) =>
+    `<tr><td>${esc(r.q)}</td>${hasSum ? `<td class="c">${cell(r.summary)}</td>` : ""}<td class="c">${cell(r.ir)}</td><td class="why">${r.fetched.map((f) => `<code>${esc(f.symbol)}</code>${f.status === "dropped" ? " (dropped)" : ""}`).join(", ") || "nothing"}</td></tr>`).join("")}</tbody>`;
+}
+
+/* ---------- live mode: loader ---------- */
+function renderLoader(queries, stats, fresh) {
+  if (fresh) { $("qlog").innerHTML = '<div class="status">Send a message to see what the loader fetches.</div>'; }
+  if (queries) $("qchips").innerHTML = queries.length ? '<span class="label" style="align-self:center">Try</span>' + queries.map((q) => `<button class="chip" type="button">${esc(q)}</button>`).join("") : "";
+  const H = stats.header_tokens, E = stats.expanded_tokens, T = current.tokens.full;
+  $("meter").innerHTML = `<span style="width:${(100 * H / T).toFixed(2)}%;background:var(--accent)"></span><span style="width:${(100 * E / T).toFixed(2)}%;background:var(--warn)"></span>`;
+  $("metertext").innerHTML = `Loaded so far: IR ${H} + fetched ${E} = <b>${H + E}</b> tokens, vs ${T} to re-read the whole chat (${pct(H + E, T)}).`;
+}
+async function sendQuery(q) {
+  q = q.trim(); if (!q) return;
+  try {
+    const r = await api("/api/query", { session: current.session, query: q });
+    const html = `<div class="res"><div><span class="label">You</span> ${esc(r.query)}</div>${r.resolved.length ? r.resolved.map((x) =>
+      `<div><span class="${x.status === "live" ? "mark-good" : "mark-bad"}">${x.status === "live" ? "in the IR" : "dropped, fetched anyway"}</span> <code>${esc(x.symbol)}</code> <span class="why">matched by ${esc(x.matched_by)} · +${x.tokens} tokens</span><pre class="artifact" style="margin-top:6px">${esc(x.text)}</pre></div>`).join("")
+      : '<div class="muted">No fact mentioned (or already fetched), so nothing extra was loaded.</div>'}</div>`;
+    if ($("qlog").querySelector(".status")) $("qlog").innerHTML = "";
+    $("qlog").insertAdjacentHTML("afterbegin", html);
+    renderLoader(null, r, false);
+  } catch (e) { $("qlog").insertAdjacentHTML("afterbegin", `<div class="err">${esc(e.message)}</div>`); }
+}
+
+/* ---------- loading data ---------- */
+async function load(id, body) {
+  $("err").textContent = "";
+  if (!LIVE) { active = id; render(DATA.samples.find((s) => s.id === id)); return; }
+  const btn = $("compile"); btn.disabled = true; const old = btn.textContent; if (id === "own") btn.textContent = "Compiling…";
+  try { const sm = await api("/api/compile", body || { sample: id }); active = id; render(sm); if (id === "own") $("r-title").scrollIntoView({ behavior: "smooth" }); }
+  catch (e) { $("err").textContent = e.message; if (id !== "own") $("note").textContent = e.message; }
+  finally { btn.disabled = false; btn.textContent = old; }
+}
+
+async function init() {
+  if (LIVE) {
+    $("sec-input").hidden = false; $("sec-loader").hidden = false;
+    $("modenote").textContent = "Running live: every chat on this page is compiled by the Python pipeline through the local server.";
+    try { const r = await api("/api/samples"); SAMPLES = r.samples; tokenizer = r.tokenizer; }
+    catch (e) { $("note").textContent = "Could not reach the ctxc server. Start it with: python -m ctxc serve"; return; }
+  } else {
+    SAMPLES = DATA.samples;
+    $("modenote").innerHTML = "This is a saved snapshot. Run <code>python -m ctxc serve</code> to compile your own chats and try the loader live.";
+  }
+  $("samples").addEventListener("click", (e) => { const b = e.target.closest("button[data-id]"); if (b && b.dataset.id !== "own") load(b.dataset.id); });
+  if (LIVE) {
+    $("compile").onclick = () => load("own", { transcript: $("t-in").value, filename: $("t-name").textContent || "pasted chat", summary: $("s-in").value });
+    $("t-file").addEventListener("change", async (e) => { const f = e.target.files[0]; if (!f) return; $("t-in").value = await f.text(); $("t-name").textContent = f.name; });
+    $("t-in").addEventListener("input", () => { $("t-name").textContent = ""; });
+    $("qform").addEventListener("submit", (e) => { e.preventDefault(); sendQuery($("q").value); $("q").value = ""; });
+    $("qchips").addEventListener("click", (e) => { const b = e.target.closest("button.chip"); if (b) sendQuery(b.textContent); });
+    $("qreset").onclick = async () => { try { const r = await api("/api/reset", { session: current.session }); renderLoader(null, r, true); } catch (e) { $("err").textContent = e.message; } };
+  }
+  load(SAMPLES[0].id);
+}
+init();
+</script>

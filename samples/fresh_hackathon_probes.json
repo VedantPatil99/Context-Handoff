@@ -1,0 +1,22 @@
+{
+  "_note": "FRESH HELD-OUT sample. One question per gold fact plus one per abandoned/retracted item. Written before any v2 improvement was implemented.",
+  "probes": [
+    {"id": "name",         "q": "What is the hackathon called?",                    "answer": ["HackVIT"]},
+    {"id": "participants", "q": "How many participants do we expect?",              "answer": ["300"]},
+    {"id": "team_size",    "q": "What is the maximum team size?",                   "answer": ["up to 4", "4 people", "of 4"]},
+    {"id": "duration",     "q": "How long does the hackathon run?",                 "answer": ["24 hour", "24-hour"]},
+    {"id": "venue",        "q": "Where is the hackathon being held?",               "answer": ["Anna Auditorium"]},
+    {"id": "date",         "q": "What date is the hackathon?",                      "answer": ["21 February", "Feb 21"], "stale": ["14 February", "Feb 14"]},
+    {"id": "budget",       "q": "What is the total budget?",                        "answer": ["2 lakh", "2,00,000", "200,000"]},
+    {"id": "food_cap",     "q": "How much can we spend on food?",                   "answer": ["90,000"]},
+    {"id": "end_time",     "q": "When does hacking end?",                           "answer": ["10 am", "10:00", "10am"]},
+    {"id": "devpost",      "q": "How will teams submit their projects?",            "answer": ["Devpost"]},
+    {"id": "sponsor",      "q": "Who is the title sponsor?",                        "answer": ["Zoho"]},
+    {"id": "sponsor_date", "q": "By when must sponsors be confirmed?",              "answer": ["31 January", "Jan 31"]},
+    {"id": "prizes",       "q": "How much is the first prize?",                     "answer": ["30,000"]},
+    {"id": "judges",       "q": "How many judges will there be?",                   "answer": ["4 judges", "four judges"]},
+    {"id": "criteria",     "q": "What are the judging criteria?",                   "answer": ["technical difficulty"]},
+    {"id": "merch",        "q": "Are we making hoodies?",                           "not_current": "hoodie"},
+    {"id": "livestream",   "q": "Are we livestreaming the closing ceremony?",       "not_current": "livestream"}
+  ]
+}

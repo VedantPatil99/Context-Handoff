@@ -1,0 +1,24 @@
+{
+  "tokenizer": "approx (word-piece heuristic)",
+  "tokens": {
+    "Full transcript": 1419,
+    "Prose summary (LLM-style compaction)": 388,
+    "IR (strict, as proposed) header": 174,
+    "IR (ablation: constraints global) header": 174
+  },
+  "bundle_tokens_not_loaded": 7153,
+  "live_recall": {
+    "summary": "12/12",
+    "IR (strict, as proposed)": "5/12",
+    "IR (ablation: constraints global)": "5/12"
+  },
+  "loader": {
+    "header": 174,
+    "expanded": 226,
+    "resolved": [
+      "evaluation_metric",
+      "train_test_split",
+      "pages_max_including"
+    ]
+  }
+}

@@ -1,0 +1,108 @@
+User: hi, I'm one of the organisers for our college hackathon and I need help planning it. it's called HackVIT this year
+
+Assistant: Happy to help plan HackVIT! A hackathon has a lot of moving parts, so it helps to work through them in order: date and venue, budget, schedule, sponsors, judging and prizes, and logistics like food and Wi-Fi. What do you already know?
+
+User: we expect around 300 participants. teams of up to 4 people
+
+Assistant: 300 participants in teams of up to 4 means roughly 75–100 teams, depending on how many people come solo or in smaller teams. That's a mid-sized event — big enough to need a proper hall, but manageable with a small organising team.
+
+User: the event is 24 hours long, starting saturday morning
+
+Assistant: A 24-hour format starting Saturday morning is classic — teams build through the night and present on Sunday morning. You'll want to plan meals across the whole window and a quiet rest area for people who want to sleep for a few hours.
+
+User: ok lets start with the venue and date
+
+Assistant: For 300 people overnight you need a space with enough power outlets, reliable Wi-Fi, and permission to stay open all night. On campus, an auditorium or a large lab block usually works. Which buildings are available to you?
+
+User: we booked the Anna Auditorium
+
+Assistant: Anna Auditorium is a good choice if it has enough tables — auditorium seating is hard to code on. You might need to bring in extra tables and extension cords. Check the seating layout with the facilities team.
+
+User: date is 14 February
+
+Assistant: 14 February works, though it's Valentine's Day, so some people may have plans. It could also be a fun theme. Make sure it doesn't clash with internal exams.
+
+User: hmm, turns out mid-sem exams end on the 13th, people will be exhausted. we moved it to 21 February
+
+Assistant: Moving to 21 February is sensible — a week's buffer after exams should help turnout and energy levels. I'll use the 21st from now on.
+
+User: ok, budget next
+
+Assistant: For budget, the main cost lines for a hackathon this size are food (usually the biggest), prizes, swag, venue setup (tables, power, Wi-Fi boosting), and contingency. What's your total budget?
+
+User: total budget is 2 lakh rupees
+
+Assistant: ₹2,00,000 for 300 people is workable if sponsors cover part of the prizes. A rough split might be 45% food, 25% prizes, 15% swag, 10% setup, and 5% contingency.
+
+User: food can't go over 90,000
+
+Assistant: Capping food at ₹90,000 fits the 45% guideline almost exactly. For four or five meals plus snacks for 300 people, that's about ₹60–75 per person per meal, which is realistic for campus catering.
+
+User: within this, lets first figure out the merch — I was thinking hoodies
+
+Assistant: Hoodies are popular but expensive — usually ₹500–700 each in bulk, so 300 hoodies would cost more than your whole swag budget. T-shirts at ₹200–250 are the usual compromise, or you could do hoodies only for winners and volunteers.
+
+User: we'd want the design done by a student designer
+
+Assistant: Using a student designer is a nice touch and keeps costs down. Give them the HackVIT logo, the colour palette, and a firm deadline at least three weeks before the event so printing isn't rushed.
+
+User: honestly merch is a rabbit hole, lets skip it for now and come back if we have money left. moving on to the schedule
+
+Assistant: Good call — merch can always be added later. For a 24-hour hackathon starting Saturday morning, a typical schedule is:
+
+- 8:00 Registration and breakfast
+- 9:30 Opening ceremony
+- 10:00 Hacking begins
+- 13:00 Lunch
+- 20:00 Dinner
+- 00:00 Midnight snacks and a short fun activity
+- 08:00 Breakfast
+- 10:00 Hacking ends, submissions due
+- 10:30 Judging
+- 13:00 Closing ceremony and prizes
+
+User: hacking ends at 10 am sunday
+
+Assistant: 10:00 on Sunday as the hard submission deadline, then judging right after. I'd recommend submissions through Devpost or a Google Form so timestamps are clear.
+
+User: we'll use Devpost for submissions
+
+Assistant: Devpost is the standard — it gives you a public gallery of projects, handles team sign-ups, and judges can score directly on it.
+
+User: we also want to livestream the closing ceremony on youtube
+
+Assistant: A livestream is a nice way to include people who couldn't attend and gives sponsors extra visibility. You'd need a decent camera, a stable wired connection, and someone running OBS.
+
+User: now lets work on sponsors
+
+Assistant: For sponsors, think in tiers — for example Gold (₹50,000), Silver (₹25,000), Bronze (₹10,000) — with benefits like logo placement, a booth, a sponsored prize track, or a talk slot. Local startups and alumni-founded companies are usually the most responsive.
+
+User: Our title sponsor is Zoho
+
+Assistant: Having Zoho as title sponsor is a big win — that adds credibility when you approach other companies. You could offer them a dedicated prize track and an opening talk.
+
+User: sponsors must be confirmed by 31 January so we can print banners
+
+Assistant: A 31 January cutoff gives you three weeks before the event, which is a sensible lead time for printing banners and standees.
+
+User: actually forget the livestream, the auditorium wifi can't handle it
+
+Assistant: Understood — dropping the livestream. You could still record the closing ceremony and upload it afterwards if you want something for sponsors.
+
+User: lets move on to judging and prizes
+
+Assistant: For judging, a common rubric is innovation, technical complexity, design and usability, and presentation, each scored 1–10. Three to five judges is typical, mixing faculty, sponsor engineers, and alumni.
+
+User: first prize is 30,000, second 20,000 and third 10,000
+
+Assistant: ₹30,000 / ₹20,000 / ₹10,000 adds up to ₹60,000, which is 30% of your budget — slightly above the 25% guideline. If Zoho funds part of the prize pool, it fits comfortably.
+
+User: we'll have 4 judges
+
+Assistant: Four judges is a good number — enough to balance individual biases, and an even split means you should decide a tie-breaking rule in advance, such as giving the head judge the deciding vote.
+
+User: judging criteria will be innovation, technical difficulty and presentation, equally weighted
+
+Assistant: Three equally weighted criteria keep scoring simple and fast, which matters when judges have to get through 75+ teams in a few hours. You might do a quick first round at tables and a final round of on-stage demos for the top 10.
+
+User: ok what's the best way to run the first round of judging so it doesn't drag?
