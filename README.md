@@ -101,7 +101,7 @@ API (`ctxc/server.py`): `GET /api/samples`, `POST /api/compile`, `POST /api/quer
 python -m ctxc dashboard
 ```
 
-This compiles both samples and writes `results/dashboard.html`. It is the same page with the results saved into it, so it works offline, built from the pipeline's own output, with no numbers typed in by hand. It reads top to bottom:
+This compiles both samples and writes `results/dashboard.html` on your machine (generated pages are not committed to the repository). It is the same page with the results saved into it, so it works offline, built from the pipeline's own output, with no numbers typed in by hand. It reads top to bottom:
 
 1. The result.
 2. The four compiler passes, each shown on a real example from the chat.
