@@ -30,6 +30,8 @@ SAMPLES = [
     {"id": "heldout_ml_report", "title": "Held-out: ML report (39 turns)",
      "note": "Held-out sample, written after the fixes. First run carried 5/12 facts; "
              "this view is after the informal-text fix, so it is no longer a held-out measure."},
+    {"id": "fresh_hackathon", "title": "Fresh held-out: hackathon (49 turns)",
+     "note": "Fresh held-out sample, written and locked before any v2 code existed (samples/fresh_hackathon.LOCKED.sha256)."},
 ]
 
 
@@ -96,9 +98,52 @@ def _lexemes(res: CompileResult) -> list[dict]:
     return out
 
 
+def _live(res: CompileResult) -> dict[str, str]:
+    return {n: s["versions"][-1]["value"] for n, s in res.bundle["symbols"].items() if s["live"]}
+
+
+def llm_compare(turns, source: str, rules: CompileResult, summary: str | None, probes: list[dict] | None) -> dict:
+    """Rules-only front end vs rules + grounded LLM pass, on the same chat."""
+    from .llm_extract import MODEL
+    try:
+        post = compile_turns(turns, source, extractor="llm")
+    except OSError as e:   # Ollama not running and no cached output for this chat
+        return {"error": f"The local model ({MODEL}) is not reachable and there is no cached run for this chat: {e}"}
+    pre_live, post_live = _live(rules), _live(post)
+    pre_vals = {v.lower() for v in pre_live.values()}
+    facts = []
+    for name, val in post_live.items():
+        if name not in pre_live:
+            facts.append({"change": "added" if val.lower() not in pre_vals else "renamed", "symbol": name, "before": None, "after": val})
+        elif pre_live[name] != val:
+            facts.append({"change": "revised", "symbol": name, "before": pre_live[name], "after": val})
+    for name, val in pre_live.items():
+        if name not in post_live:
+            facts.append({"change": "removed", "symbol": name, "before": val, "after": None})
+    out = {
+        "model": MODEL,
+        "log": post.front.llm_log,
+        "facts": facts,
+        "live": {"before": len(pre_live), "after": len(post_live)},
+        "tokens": {"before": count_tokens(rules.header), "after": count_tokens(post.header)},
+        "header": post.header,
+        "probes": None,
+    }
+    if probes:
+        a, b = run_probes(rules.bundle, summary, probes), run_probes(post.bundle, summary, probes)
+        out["probes"] = {"n": a["n"], "before": a["totals"]["ir"], "after": b["totals"]["ir"],
+                         "summary": a["totals"]["summary"], "summary_tokens": a["tokens"]["summary"],
+                         "tokens_before": a["tokens"]["ir_avg"], "tokens_after": b["tokens"]["ir_avg"],
+                         "changed": [{"q": x["q"], "before": x["ir"], "after": y["ir"]}
+                                     for x, y in zip(a["rows"], b["rows"]) if x["ir"] != y["ir"]],
+                         "rows": [{"q": x["q"], "summary": x["summary"], "before": x["ir"], "after": y["ir"]}
+                                  for x, y in zip(a["rows"], b["rows"])]}
+    return out
+
+
 def analyze_chat(turns, source: str, summary: str | None = None, gold: dict | None = None,
                  queries: list[str] | None = None, probes: list[dict] | None = None,
-                 **meta) -> tuple[dict, CompileResult]:
+                 llm: bool = False, **meta) -> tuple[dict, CompileResult]:
     """Compile one chat both ways and package everything the pages display.
 
     ``summary`` and ``gold`` are optional (a pasted chat may have neither);
@@ -127,6 +172,7 @@ def analyze_chat(turns, source: str, summary: str | None = None, gold: dict | No
         "configs": {k: _config(r) for k, r in configs.items()},
         "queries": queries or [],
         "probes": run_probes(strict.bundle, summary, probes) if probes else None,
+        "llm": llm_compare(turns, source, strict, summary, probes) if llm else None,
     }
     return data, strict
 
@@ -148,7 +194,7 @@ def sample_files(sid: str) -> dict:
 def build_sample(spec: dict) -> dict:
     f = sample_files(spec["id"])
     data, _ = analyze_chat(load_transcript(f["chat"]), str(f["chat"]), f["summary"], f["gold"], f["queries"],
-                           f["probes"], **spec)
+                           f["probes"], llm=True, **spec)
     return data
 
 

@@ -29,7 +29,44 @@ The fresh hackathon chat was written before any v2 code existed. Its files are l
 
 **Remaining misses:** descriptive statements with no concrete value ("Students browse, club organisers post", "criteria will be innovation, technical difficulty and presentation"), and abandoned sub-steps that were never recognised as a phase.
 
-**Not yet updated:** the reports in `results/` and both dashboards still show v1 numbers.
+**Not yet updated:** the reports in `results/` still show v1 numbers; the web app computes v2 results live.
+
+## Update: LLM-assisted fact extraction (`--extractor llm`)
+
+The remaining misses above are mostly facts the rule grammar cannot see. An optional front end (`ctxc/llm_extract.py`) adds a local LLM pass **after** the rules; nothing else in the pipeline changes.
+
+For every user message, a local model (`qwen2.5:7b` via [Ollama](https://ollama.com), temperature 0) is shown the message's sentences with their locations, the previous assistant message, the facts found so far, and what the rules recorded. It must answer in a fixed JSON schema with only three operations, each carrying a value, a location and a quote from the user:
+
+```json
+{"events": [{"op": "define | revise | retract", "symbol": "...", "value": "...", "loc": "t12.1", "quote": "..."}]}
+```
+
+No proposal reaches the symbol table unless it passes the grounding checks; rejected ones are logged with the failed check:
+
+| Check | Rejected when |
+|---|---|
+| `G-LOC` | the location is not a sentence of the message |
+| `G-QUOTE` | under 80% of the quote's words occur in the user's message |
+| `G-VALUE` | a number in the value is not in the source, or under half of its content words are |
+| `G-TARGET` | a revise/retract names no live symbol |
+| `G-DUP` | the value is already held by a symbol |
+
+Raw model output is cached by prompt hash in `results/llm_cache/`, so the results below reproduce without the model installed.
+
+| Questions answerable · header tokens | Prose summary | IR v2 (rules) | IR v2 + LLM |
+|---|---|---|---|
+| Campus chat | 21/21 · 427 | 20/21 · 267 | 20/21 · 308 |
+| ML report chat | 14/14 · 388 | 14/14 · 263 | 14/14 · 285 |
+| **Hackathon chat (held out)** | **17/17 · 344** | **15/17 · 214** | **17/17 · 250** |
+
+On the hackathon chat the LLM pass recovered the judging criteria and the abandoned hoodie idea, and turned "we moved it to 21 February" into `21 February (was 14 February)`. On the development chats it did not change the score and added 22–41 tokens. The prompt was revised once after its first run on the hackathon chat (which proposed too little), so that result is not strictly held out. The checks show that an accepted fact is in the user's words, not that it is useful: a few accepted facts were noise (a user question stored as a fact).
+
+```
+ollama pull qwen2.5:7b
+python -m ctxc compile samples/fresh_hackathon_chat.txt --extractor llm
+```
+
+The web app shows a **"Fact extraction: rules only vs rules + LLM"** panel for each sample: before/after bars, every question before and after, symbol-table changes, every LLM proposal with its result, and the two handoffs side by side.
 
 
 ## Pipeline ↔ compiler concepts

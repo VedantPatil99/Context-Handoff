@@ -34,14 +34,19 @@ class CompileResult:
 
 
 def compile_turns(turns: list[Turn], source: str = "<memory>", *,
-                  global_kinds: frozenset[str] = frozenset()) -> CompileResult:
+                  global_kinds: frozenset[str] = frozenset(), extractor: str = "rules") -> CompileResult:
     lexemes = lex(turns)
-    fe = run_front_end(lexemes)
+    if extractor == "llm":
+        from .llm_extract import run_llm_front_end
+        fe = run_llm_front_end(lexemes)
+    else:
+        fe = run_front_end(lexemes)
     reach = analyze(fe, global_kinds)
     part = separate(fe.symtab, reach)
     bundle = ir.build_bundle(fe, reach, part, source=source, raw_text=render(turns), n_turns=len(turns))
     return CompileResult(turns, fe, reach, part, bundle)
 
 
-def compile_file(path: str | Path, *, global_kinds: frozenset[str] = frozenset()) -> CompileResult:
-    return compile_turns(load_transcript(path), source=str(path), global_kinds=global_kinds)
+def compile_file(path: str | Path, *, global_kinds: frozenset[str] = frozenset(),
+                 extractor: str = "rules") -> CompileResult:
+    return compile_turns(load_transcript(path), source=str(path), global_kinds=global_kinds, extractor=extractor)

@@ -29,7 +29,7 @@ def _out(s: str):
 
 def cmd_compile(a):
     gk = frozenset({"constraint"}) if a.global_constraints else frozenset()
-    r = compile_file(a.transcript, global_kinds=gk)
+    r = compile_file(a.transcript, global_kinds=gk, extractor=a.extractor)
     base = Path(a.output) if a.output else Path(a.transcript).with_suffix("")
     hp, bp = ir.write(r.bundle, base)
     _out(r.header)
@@ -116,6 +116,8 @@ def main(argv=None):
     sp = p.add_subparsers(dest="cmd", required=True)
     c = sp.add_parser("compile"); c.add_argument("transcript"); c.add_argument("-o", "--output")
     c.add_argument("--global-constraints", action="store_true", help="ablation: treat constraints as global")
+    c.add_argument("--extractor", choices=["rules", "llm"], default="rules",
+                   help="front end: rule grammar only, or rules + grounded local LLM pass (needs Ollama)")
     c.set_defaults(fn=cmd_compile)
     c = sp.add_parser("audit"); c.add_argument("bundle"); c.add_argument("-v", "--verbose", action="store_true")
     c.set_defaults(fn=cmd_audit)

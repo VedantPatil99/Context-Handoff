@@ -89,6 +89,9 @@ table { width: 100%; border-collapse: collapse; font-size: 14px; }
 th { text-align: left; font-size: 12px; color: var(--muted); font-weight: 600; padding: 6px 10px; border-bottom: 1px solid var(--line); }
 td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
 td.c { white-space: nowrap; }
+.dl { white-space: pre-wrap; word-break: break-word; padding: 1px 6px; border-radius: 4px; font-size: 12.5px; line-height: 1.55; }
+.dl.add { background: color-mix(in srgb, var(--good) 16%, transparent); color: var(--fg); }
+.dl.del { background: color-mix(in srgb, var(--bad) 13%, transparent); color: var(--muted); text-decoration: line-through; }
 .empty { border: 1px dashed var(--line); border-radius: 8px; padding: 16px; color: var(--muted); display: flex; flex-direction: column; gap: 8px; }
 /* server mode: input + loader */
 .inbox { display: flex; flex-direction: column; gap: 12px; }
@@ -148,6 +151,19 @@ footer { font-size: 13px; color: var(--muted); display: flex; flex-direction: co
     <p class="verdict" id="pverdict"></p>
     <details class="panel"><summary>See every question</summary><div class="tbl" style="margin-top:12px"><table id="ptable"></table></div></details>
     <p class="muted" style="font-size:13px;max-width:80ch">"Answerable" means the information needed for the answer is in what the new session receives. It does not test whether a model would then answer correctly. Questions were written from the expected-fact list, one per fact, plus one per abandoned or cancelled item.</p>
+  </section>
+
+  <section id="sec-llm" hidden>
+    <div><h2>Fact extraction: rules only vs rules + LLM</h2><p class="lead" id="llm-lead"></p></div>
+    <div class="panel bars" id="llm-bars"></div>
+    <p class="verdict" id="llm-verdict"></p>
+    <details class="panel" id="llm-qwrap"><summary>Every question, before and after</summary><div class="tbl" style="margin-top:12px"><table id="llm-q"></table></div></details>
+    <div class="panel"><h3 style="margin-bottom:10px">What changed in the symbol table</h3><div class="tbl"><table id="llm-facts"></table></div></div>
+    <div class="panel"><h3 style="margin-bottom:4px">Every proposal the LLM made</h3><p class="why" style="margin-bottom:10px">Each proposal must quote the user's sentence, cite its location, and (for a revision or cancellation) name an existing symbol. Proposals that fail a check are rejected and listed with the check that failed.</p><div class="tbl"><table id="llm-log"></table></div></div>
+    <div class="panel"><h3 style="margin-bottom:4px">The handoff before and after</h3><p class="why" style="margin-bottom:10px">The same chat compiled twice. Lines only in the before version are struck out in red; lines the LLM pass added or changed are highlighted in green.</p>
+      <div class="two"><div><div class="label" style="margin-bottom:6px">Before: rules only <span id="llm-bt"></span></div><div class="artifact mono" style="max-height:none" id="llm-ir-before"></div></div>
+      <div><div class="label" style="margin-bottom:6px">After: rules + LLM <span id="llm-at"></span></div><div class="artifact mono" style="max-height:none" id="llm-ir"></div></div></div></div>
+    <p class="muted" style="font-size:13px;max-width:80ch" id="llm-note"></p>
   </section>
 
   <section>
@@ -257,6 +273,7 @@ function render(sm) {
     : `The Context IR is ${pct(t.strict, t.full)} of the chat. Paste a prose summary of the same chat to compare against it.`;
 
   renderProbes(sm.probes);
+  renderLLM(sm.llm, c.header);
 
   const kept = L.filter((l) => l.role === "user" && l.events.some((e) => e.op === "define")).slice(0, 3);
   const skipped = L.filter((l) => l.role === "user" && SKIP[l.discard]).slice(0, 3);
@@ -309,6 +326,50 @@ function render(sm) {
   $("note").textContent = `${sm.note || ""} Token counts: ${tokenizer}.${sm.id ? " The prose summary was written by an AI assistant, the way an LLM auto-compaction summarises." : ""}`;
 
   if (LIVE) renderLoader(sm.queries, { header_tokens: c.header_tokens, expanded_tokens: 0 }, true);
+}
+
+const CHANGE = { added: ["mark-good", "New fact"], revised: ["mark-warn", "Value updated"], renamed: ["muted", "Same value, new name"], removed: ["mark-bad", "No longer live"] };
+const GWHY = { "G-LOC": "location not in this message", "G-QUOTE": "quote not found in the sentence", "G-VALUE": "value not grounded in the sentence", "G-TARGET": "names no existing fact", "G-DUP": "already in the symbol table", "G-OP": "unknown operation" };
+function renderLLM(M, before) {
+  $("sec-llm").hidden = !M;
+  if (!M) return;
+  $("llm-lead").innerHTML = `Only the first pass changes. The rule grammar runs as before, then after each user message a local LLM (<code>${esc(M.model || "")}</code>, run offline at temperature 0) is shown that message, the facts found so far, and what the rules recorded. It may propose only three operations: <b>define</b> a missed fact, <b>revise</b> an existing fact, or <b>retract</b> one. The symbol table, scopes, reachability, constant pool and loader are unchanged.`;
+  if (M.error) { $("llm-bars").innerHTML = `<p class="err">${esc(M.error)}</p>`; ["llm-verdict", "llm-facts", "llm-log", "llm-ir", "llm-ir-before", "llm-note"].forEach((id) => ($(id).innerHTML = "")); return; }
+  const P = M.probes, rows = [
+    ["Live facts", M.live.before, M.live.after, Math.max(M.live.before, M.live.after), "facts"],
+    ["IR header", M.tokens.before, M.tokens.after, Math.max(M.tokens.before, M.tokens.after), "tokens"]];
+  if (P) rows.push(["Questions answerable", P.before.answerable, P.after.answerable, P.n, `of ${P.n}`]);
+  $("llm-bars").innerHTML = rows.map(([nm, a, b, mx, unit]) => `<div class="row"><span class="name">${nm}</span><div style="display:flex;flex-direction:column;gap:4px">
+      <div class="track" style="height:14px" title="rules only"><div class="fill" style="width:${(100 * a / mx).toFixed(1)}%"></div></div>
+      <div class="track" style="height:14px" title="rules + LLM"><div class="fill ir" style="width:${(100 * b / mx).toFixed(1)}%"></div></div></div>
+      <span class="nums"><span class="muted">rules only</span> <b>${a}</b> → <span class="muted">+ LLM</span> <b>${b}</b> <span class="muted">${unit}</span></span></div>`).join("")
+    + '<p class="why">Grey bar: rules only (before). Blue bar: rules + LLM (after).</p>';
+  const acc = M.log.filter((e) => e.accepted && e.op !== "merge").length, dup = M.log.filter((e) => e.rule === "G-DUP").length,
+    rej = M.log.filter((e) => !e.accepted && e.rule !== "G-DUP").length;
+  $("llm-verdict").innerHTML = `The LLM proposed ${acc + rej + dup} operations. <b>${dup}</b> repeated facts the rules had already found (no change), <b>${acc} ${acc === 1 ? "was" : "were"} accepted</b> as new information, and <b>${rej} ${rej === 1 ? "was" : "were"} rejected</b> by the grounding checks.`
+    + (P ? ` Questions answerable from the IR went from <b>${P.before.answerable}</b> to <b>${P.after.answerable}</b> of ${P.n}`
+      + (P.summary ? ` (prose summary: ${P.summary.answerable} of ${P.n} at ${P.summary_tokens} tokens)` : "")
+      + `, at ${P.tokens_before} → ${P.tokens_after} tokens per question on average. Wrong answers: ${P.before.wrong} → ${P.after.wrong}.` : "")
+    + (P && P.changed.length ? `<br><span class="why">Questions that changed: ${P.changed.map((c) => `“${esc(c.q)}” (${c.before} → ${c.after})`).join("; ")}</span>` : "");
+  const st = (v) => v === null || v === undefined ? '<span class="muted">—</span>' : v === "answerable" ? '<span class="mark-good">✓ answerable</span>' : v === "wrong" ? '<span class="mark-bad">✗ wrong</span>' : '<span class="mark-bad">✗ no info</span>';
+  $("llm-qwrap").hidden = !P;
+  if (P) $("llm-q").innerHTML = `<thead><tr><th>Question</th><th>Before (rules only)</th><th>After (rules + LLM)</th><th>Prose summary</th></tr></thead><tbody>${P.rows.map((r) =>
+    `<tr${r.before !== r.after ? ' style="background:color-mix(in srgb, var(--good) 8%, transparent)"' : ""}><td>${esc(r.q)}</td><td class="c">${st(r.before)}</td><td class="c">${st(r.after)}</td><td class="c">${st(r.summary)}</td></tr>`).join("")}
+    <tr><td><b>Total</b></td><td class="c"><b>${P.before.answerable} / ${P.n}</b></td><td class="c"><b>${P.after.answerable} / ${P.n}</b></td><td class="c"><b>${P.summary ? P.summary.answerable + " / " + P.n : "—"}</b></td></tr></tbody>`;
+  $("llm-facts").innerHTML = `<thead><tr><th>Change</th><th>Symbol</th><th>Rules only</th><th>Rules + LLM</th></tr></thead><tbody>${M.facts.map((f) =>
+    `<tr><td class="c"><span class="${CHANGE[f.change][0]}">${CHANGE[f.change][1]}</span></td><td><code>${esc(f.symbol)}</code></td><td>${f.before === null ? '<span class="muted">—</span>' : esc(f.before)}</td><td>${f.after === null ? '<span class="muted">—</span>' : esc(f.after)}</td></tr>`).join("")
+    || '<tr><td colspan="4" class="muted">The LLM pass did not change the live facts for this chat.</td></tr>'}</tbody>`;
+  $("llm-log").innerHTML = `<thead><tr><th>Result</th><th>Operation</th><th>From the user's words</th><th>Fact</th></tr></thead><tbody>${M.log.filter((e) => e.rule !== "G-DUP").map((e) =>
+    `<tr><td class="c">${e.accepted ? '<span class="mark-good">✓ accepted</span>' : '<span class="mark-bad">✗ rejected</span>'}<br><span class="why mono">${esc(e.rule)}</span></td>
+     <td class="c"><code>${esc(e.op)}</code><br><span class="why mono">${esc(e.loc)}</span></td>
+     <td>${e.quote ? `“${esc(e.quote)}”` : '<span class="muted">—</span>'}${!e.accepted ? `<br><span class="why">${esc(GWHY[e.rule] || e.why || "")}</span>` : e.why ? `<br><span class="why">${esc(e.why)}</span>` : ""}</td>
+     <td><code>${esc(e.ssa || e.symbol)}</code> = ${esc(e.value)}</td></tr>`).join("") || '<tr><td colspan="4" class="muted">The LLM proposed nothing for this chat.</td></tr>'}</tbody>`;
+  const bl = (before || "").split("\n"), al = M.header.split("\n"), bs = new Set(bl), as = new Set(al);
+  const line = (l, cls) => `<div class="dl ${cls}">${esc(l) || "&nbsp;"}</div>`;
+  $("llm-ir-before").innerHTML = bl.map((l) => line(l, as.has(l) ? "" : "del")).join("");
+  $("llm-ir").innerHTML = al.map((l) => line(l, bs.has(l) ? "" : "add")).join("");
+  $("llm-bt").textContent = `· ${M.tokens.before} tokens`; $("llm-at").textContent = `· ${M.tokens.after} tokens`;
+  $("llm-note").textContent = "The model's raw output is cached per prompt in results/llm_cache, so these numbers come from a real run and can be reproduced without re-running the model. The rule-only pipeline stays the default; the LLM pass is the optional --extractor llm.";
 }
 
 function renderProbes(P) {

@@ -71,7 +71,7 @@ def api_compile(req: dict) -> dict:
             raise ApiError(404, f"No sample called {req['sample']!r}.")
         f = sample_files(spec["id"])
         data, strict = analyze_chat(load_transcript(f["chat"]), str(f["chat"]), f["summary"], f["gold"],
-                                    f["queries"], f["probes"], **spec)
+                                    f["queries"], f["probes"], llm=True, **spec)
     else:
         raw = req.get("transcript") or ""
         if not raw.strip():
@@ -83,7 +83,7 @@ def api_compile(req: dict) -> dict:
             raise ApiError(400, f"Could not read this transcript: {e}.")
         if not turns:
             raise ApiError(400, "No messages found. Plain text needs lines starting with 'User:' and 'Assistant:'.")
-        data, strict = analyze_chat(turns, name, req.get("summary"), None, None, title=name,
+        data, strict = analyze_chat(turns, name, req.get("summary"), None, None, llm=bool(req.get("llm")), title=name,
                                     note="Your own chat. No expected-fact list exists for it, so fact retention "
                                          "is not scored.")
     data["session"] = _new_session(ContextLoader(strict.bundle))
